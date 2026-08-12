@@ -193,6 +193,8 @@ class NeoReSensor(NeoReEntity, SensorEntity):
         self._attr_device_class = definition.device_class
         self._attr_state_class = definition.state_class
         self._attr_native_unit_of_measurement = definition.unit
+        if definition.object_name == OBJECT_FLOW_RATE:
+            self._attr_suggested_display_precision = 2
 
     @property
     def native_value(self):

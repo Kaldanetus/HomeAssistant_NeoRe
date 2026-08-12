@@ -2,11 +2,11 @@
 
 [English](README.md) | **Čeština**
 
-Verze **0.3.4**.
+Verze **0.3.5**.
 
-## Co se změnilo ve verzi 0.3.4
+## Co se změnilo ve verzi 0.3.5
 
-Verze 0.3.4 zachovává dosavadní chování integrace a přidává ukázkovou kartu Lovelace dashboardu pro čtyřbodovou topnou křivku NeoRé. Ukázka je uložena v souboru `examples/ekvitermni_krivka_plotly.yaml` a používá kartu Plotly Graph Card, aby osa x mohla zobrazovat skutečné body venkovní teploty −20 / −7 / +6 / +19 °C.
+Verze 0.3.5 zkracuje české názvy korekce a bodů ekvitermní křivky, zobrazuje korekci jako posuvník a nastavuje výchozí přesnost průtoku topné vody na dvě desetinná místa.
 
 Integrace při každém načtení nebo opětovném načtení integrace v Home Assistantu zjišťuje dostupné funkce z `/tecoapi/getlist`. Vytvoří pouze entity, které připojený regulátor skutečně poskytuje. Jedna verze integrace tak podporuje různé generace regulátorů a softwaru NeoRé.
 
