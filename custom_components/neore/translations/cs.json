@@ -103,22 +103,22 @@
         "name": "Požadovaná teplota objektu"
       },
       "water_correction": {
-        "name": "Regulační korekce teploty vody"
+        "name": "Korekce"
       },
       "cooling_water_setpoint": {
         "name": "Požadovaná teplota chladicí vody"
       },
       "heating_curve_a": {
-        "name": "Ekvitermní křivka při −20 °C"
+        "name": "Ekv. křivka při −20 °C"
       },
       "heating_curve_b": {
-        "name": "Ekvitermní křivka při −7 °C"
+        "name": "Ekv. křivka při −7 °C"
       },
       "heating_curve_c": {
-        "name": "Ekvitermní křivka při +6 °C"
+        "name": "Ekv. křivka při +6 °C"
       },
       "heating_curve_d": {
-        "name": "Ekvitermní křivka při +19 °C"
+        "name": "Ekv. křivka při +19 °C"
       }
     }
   }

@@ -33,13 +33,20 @@ class NeoReNumberDefinition:
     min_value: float
     max_value: float
     step: float = 1.0
+    mode: NumberMode = NumberMode.BOX
     entity_category: EntityCategory | None = None
 
 
 NUMBER_DEFINITIONS: tuple[NeoReNumberDefinition, ...] = (
     NeoReNumberDefinition(OBJECT_DHW_SETPOINT, "dhw_setpoint", 30.0, 60.0),
     NeoReNumberDefinition(OBJECT_ROOM_SETPOINT, "room_setpoint", 10.0, 30.0, 0.5),
-    NeoReNumberDefinition(OBJECT_WATER_CORRECTION, "water_correction", -9.0, 9.0),
+    NeoReNumberDefinition(
+        OBJECT_WATER_CORRECTION,
+        "water_correction",
+        -9.0,
+        9.0,
+        mode=NumberMode.SLIDER,
+    ),
     NeoReNumberDefinition(
         OBJECT_COOLING_WATER_SETPOINT, "cooling_water_setpoint", 15.0, 20.0
     ),
@@ -105,7 +112,6 @@ class NeoReTemperatureNumber(NeoReEntity, NumberEntity):
 
     _attr_device_class = NumberDeviceClass.TEMPERATURE
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
-    _attr_mode = NumberMode.BOX
 
     def __init__(self, entry, coordinator, definition: NeoReNumberDefinition) -> None:
         super().__init__(entry, coordinator)
@@ -115,6 +121,7 @@ class NeoReTemperatureNumber(NeoReEntity, NumberEntity):
         self._attr_native_min_value = definition.min_value
         self._attr_native_max_value = definition.max_value
         self._attr_native_step = definition.step
+        self._attr_mode = definition.mode
         self._attr_entity_category = definition.entity_category
 
     @property

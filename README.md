@@ -2,11 +2,11 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.3.4**.
+Version **0.3.5**.
 
-## What changed in 0.3.4
+## What changed in 0.3.5
 
-Version 0.3.4 keeps the existing integration behavior and adds an example Lovelace dashboard card for the four-point NeoRé heating curve. The example is stored in `examples/ekvitermni_krivka_plotly.yaml` and uses Plotly Graph Card so the x-axis can represent the actual outdoor-temperature points −20 / −7 / +6 / +19 °C.
+Version 0.3.5 shortens the Czech labels for the correction and heating-curve points, presents the correction as a slider, and defaults the heating-water flow display to two decimal places.
 
 The integration discovers capabilities from `/tecoapi/getlist` on every Home Assistant integration load/reload. Only entities actually exposed by the connected controller are created. This allows one integration version to support different NeoRé controller/software generations.
 

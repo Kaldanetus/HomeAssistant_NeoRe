@@ -1,4 +1,4 @@
-# Testovací postup v0.3.4
+# Testovací postup v0.3.5
 
 ## 1. Ověření discovery
 
@@ -44,6 +44,8 @@ Očekávání:
 - `tobjekreq` se nevytvoří, pokud je při načtení integrace `tobj > 100`,
 - `OuPWM1` se zobrazuje jako požadovaný výkon oběhového čerpadla,
 - `pow1st` se zobrazuje jako požadovaný výkon TČ,
+- `ActFlow` se ve výchozím stavu zobrazuje na dvě desetinná místa,
+- `korekce` se zobrazuje jako posuvník s názvem „Korekce“,
 - při odpojení PLC se zařízení/entity stanou nedostupné,
 - dočasná chyba jedné proměnné neshodí ostatní entity.
 
