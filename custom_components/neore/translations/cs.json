@@ -71,9 +71,9 @@
         }
       },
       "tariff_permission": {
-        "name": "Provoz dle sazby",
+        "name": "Sazba",
         "state": {
-          "on": "Povolen",
+          "on": "Nízká",
           "off": "Blokován"
         }
       }
