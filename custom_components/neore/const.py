@@ -1,0 +1,95 @@
+"""Constants for the NeoRé integration."""
+
+from __future__ import annotations
+
+DOMAIN = "neore"
+
+DEFAULT_USERNAME = "foxtrot"
+DEFAULT_PASSWORD = "foxtrotAP1"
+DEFAULT_SCAN_INTERVAL = 15
+
+CONF_BASE_URL = "base_url"
+
+# Read-only temperatures.
+OBJECT_OUTDOOR_TEMPERATURE = "tvenek"
+OBJECT_RETURN_TEMPERATURE = "tvrat"
+OBJECT_ROOM_TEMPERATURE = "tobj"
+OBJECT_FLOW_TEMPERATURE = "InTtopv"
+OBJECT_DHW_TEMPERATURE = "InTtuv"
+OBJECT_ROOM_INPUT_TEMPERATURE = "InTobj"
+
+# Writable temperatures / set-points.
+OBJECT_DHW_SETPOINT = "ttuvreqmain"
+OBJECT_ROOM_SETPOINT = "tobjekreq"
+OBJECT_WATER_CORRECTION = "korekce"
+OBJECT_COOLING_WATER_SETPOINT = "tempcoolw"
+OBJECT_HEATING_CURVE = "NeoEkvValue"
+HEATING_CURVE_FIELDS: tuple[str, ...] = (
+    "TempEkvA",
+    "TempEkvB",
+    "TempEkvC",
+    "TempEkvD",
+)
+
+# Performance.
+OBJECT_FLOW_RATE = "ActFlow"
+OBJECT_HEATING_POWER = "ActHeaPow"
+OBJECT_HEAT_ENERGY = "HeatSumCnt"
+OBJECT_CIRCULATION_PUMP_REQUESTED_POWER = "OuPWM1"
+OBJECT_HEAT_PUMP_REQUESTED_POWER = "pow1st"
+
+# Other state and controls.
+OBJECT_TARIFF_PERMISSION = "sazba"
+OBJECT_MAIN_ENABLE = "chodhlavni"
+OBJECT_DHW_ENABLE = "tuvmainon"
+OBJECT_HEATING_MODE = "heating_int"
+OBJECT_ERROR_BLOCK = "errorblock"
+OBJECT_ERROR_CODE = "errcode"
+
+# Optional metadata published by NeoApi v2.
+OBJECT_NEORE_INFO = "IniNeoRe"
+OBJECT_SIMPLY_NEO_VERSION = "SimplyNeoVer"
+
+DATA_MODEL = "_model"
+DATA_API_VERSION = "_api_version"
+
+BOOLEAN_OBJECTS: frozenset[str] = frozenset(
+    {
+        OBJECT_TARIFF_PERMISSION,
+        OBJECT_MAIN_ENABLE,
+        OBJECT_DHW_ENABLE,
+        OBJECT_HEATING_MODE,
+        OBJECT_ERROR_BLOCK,
+    }
+)
+
+# Root objects the integration knows how to consume continuously. NeoEkvValue
+# is read as one structure and then flattened into four writable HA numbers.
+POLL_OBJECTS: tuple[str, ...] = (
+    OBJECT_OUTDOOR_TEMPERATURE,
+    OBJECT_RETURN_TEMPERATURE,
+    OBJECT_ROOM_TEMPERATURE,
+    OBJECT_FLOW_TEMPERATURE,
+    OBJECT_DHW_TEMPERATURE,
+    OBJECT_ROOM_INPUT_TEMPERATURE,
+    OBJECT_DHW_SETPOINT,
+    OBJECT_ROOM_SETPOINT,
+    OBJECT_WATER_CORRECTION,
+    OBJECT_COOLING_WATER_SETPOINT,
+    OBJECT_HEATING_CURVE,
+    OBJECT_FLOW_RATE,
+    OBJECT_HEATING_POWER,
+    OBJECT_HEAT_ENERGY,
+    OBJECT_CIRCULATION_PUMP_REQUESTED_POWER,
+    OBJECT_HEAT_PUMP_REQUESTED_POWER,
+    OBJECT_TARIFF_PERMISSION,
+    OBJECT_MAIN_ENABLE,
+    OBJECT_DHW_ENABLE,
+    OBJECT_HEATING_MODE,
+    OBJECT_ERROR_BLOCK,
+    OBJECT_ERROR_CODE,
+)
+
+SUPPORTED_ROOT_OBJECTS: frozenset[str] = frozenset(
+    (*POLL_OBJECTS, OBJECT_NEORE_INFO, OBJECT_SIMPLY_NEO_VERSION)
+)

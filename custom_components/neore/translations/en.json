@@ -1,0 +1,125 @@
+{
+  "title": "NeoRé",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect NeoRé heat pump",
+        "description": "Enter the local IP address or hostname of the NeoApi v2 controller.",
+        "data": {
+          "host": "IP address or hostname",
+          "username": "Username",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the controller",
+      "invalid_auth": "Authentication failed",
+      "invalid_host": "Invalid controller address",
+      "invalid_response": "Controller returned an unexpected NeoApi response",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This controller is already configured"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "outdoor_temperature": {
+        "name": "Outdoor air temperature"
+      },
+      "return_temperature": {
+        "name": "Return water temperature"
+      },
+      "room_temperature": {
+        "name": "Room temperature"
+      },
+      "flow_temperature": {
+        "name": "Flow water temperature"
+      },
+      "dhw_temperature": {
+        "name": "DHW temperature"
+      },
+      "room_input_temperature": {
+        "name": "Room temperature input"
+      },
+      "flow_rate": {
+        "name": "Heating water flow rate"
+      },
+      "heating_power": {
+        "name": "Heating power"
+      },
+      "heat_energy": {
+        "name": "Delivered heat energy"
+      },
+      "circulation_pump_requested_power": {
+        "name": "Requested circulation pump output"
+      },
+      "heat_pump_requested_power": {
+        "name": "Requested heat pump output"
+      },
+      "error_code": {
+        "name": "Error or status code"
+      }
+    },
+    "binary_sensor": {
+      "error_block": {
+        "name": "Fault status",
+        "state": {
+          "on": "Serious error",
+          "off": "All OK"
+        }
+      },
+      "tariff_permission": {
+        "name": "Tariff operation permission",
+        "state": {
+          "on": "Permitted",
+          "off": "Blocked"
+        }
+      }
+    },
+    "switch": {
+      "main_enable": {
+        "name": "Heat pump operation enabled"
+      },
+      "dhw_enable": {
+        "name": "DHW heating enabled"
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Operating mode",
+        "state": {
+          "heating": "Heating",
+          "cooling": "Cooling"
+        }
+      }
+    },
+    "number": {
+      "dhw_setpoint": {
+        "name": "DHW setpoint"
+      },
+      "room_setpoint": {
+        "name": "Room setpoint"
+      },
+      "water_correction": {
+        "name": "Water temperature control correction"
+      },
+      "cooling_water_setpoint": {
+        "name": "Cooling water setpoint"
+      },
+      "heating_curve_a": {
+        "name": "Heating curve at -20 °C"
+      },
+      "heating_curve_b": {
+        "name": "Heating curve at -7 °C"
+      },
+      "heating_curve_c": {
+        "name": "Heating curve at +6 °C"
+      },
+      "heating_curve_d": {
+        "name": "Heating curve at +19 °C"
+      }
+    }
+  }
+}

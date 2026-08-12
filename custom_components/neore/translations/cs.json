@@ -1,0 +1,125 @@
+{
+  "title": "NeoRé",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Připojit tepelné čerpadlo NeoRé",
+        "description": "Zadejte lokální IP adresu nebo název hostitele regulátoru s NeoApi v2.",
+        "data": {
+          "host": "IP adresa nebo název hostitele",
+          "username": "Uživatelské jméno",
+          "password": "Heslo"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "K regulátoru se nelze připojit",
+      "invalid_auth": "Ověření uživatele se nezdařilo",
+      "invalid_host": "Neplatná adresa regulátoru",
+      "invalid_response": "Regulátor vrátil neočekávanou odpověď NeoApi",
+      "unknown": "Neočekávaná chyba"
+    },
+    "abort": {
+      "already_configured": "Tento regulátor je již přidán"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "outdoor_temperature": {
+        "name": "Teplota venkovní"
+      },
+      "return_temperature": {
+        "name": "Teplota vratné vody"
+      },
+      "room_temperature": {
+        "name": "Teplota objektu"
+      },
+      "flow_temperature": {
+        "name": "Teplota výstupní vody"
+      },
+      "dhw_temperature": {
+        "name": "Teplota TUV"
+      },
+      "room_input_temperature": {
+        "name": "Teplota objektu – vstup"
+      },
+      "flow_rate": {
+        "name": "Průtok topné vody"
+      },
+      "heating_power": {
+        "name": "Tepelný výkon"
+      },
+      "heat_energy": {
+        "name": "Dodaná tepelná energie"
+      },
+      "circulation_pump_requested_power": {
+        "name": "Požadovaný výkon oběhového čerpadla"
+      },
+      "heat_pump_requested_power": {
+        "name": "Požadovaný výkon TČ"
+      },
+      "error_code": {
+        "name": "Kód chyby nebo stavu"
+      }
+    },
+    "binary_sensor": {
+      "error_block": {
+        "name": "Chybový stav",
+        "state": {
+          "on": "Závažná chyba",
+          "off": "Vše v pořádku"
+        }
+      },
+      "tariff_permission": {
+        "name": "Provoz dle sazby",
+        "state": {
+          "on": "Povolen",
+          "off": "Blokován"
+        }
+      }
+    },
+    "switch": {
+      "main_enable": {
+        "name": "Povolení chodu TČ"
+      },
+      "dhw_enable": {
+        "name": "Povolení ohřevu TUV"
+      }
+    },
+    "select": {
+      "operating_mode": {
+        "name": "Režim provozu",
+        "state": {
+          "heating": "Topení",
+          "cooling": "Chlazení"
+        }
+      }
+    },
+    "number": {
+      "dhw_setpoint": {
+        "name": "Požadovaná teplota TUV"
+      },
+      "room_setpoint": {
+        "name": "Požadovaná teplota objektu"
+      },
+      "water_correction": {
+        "name": "Regulační korekce teploty vody"
+      },
+      "cooling_water_setpoint": {
+        "name": "Požadovaná teplota chladicí vody"
+      },
+      "heating_curve_a": {
+        "name": "Ekvitermní křivka při −20 °C"
+      },
+      "heating_curve_b": {
+        "name": "Ekvitermní křivka při −7 °C"
+      },
+      "heating_curve_c": {
+        "name": "Ekvitermní křivka při +6 °C"
+      },
+      "heating_curve_d": {
+        "name": "Ekvitermní křivka při +19 °C"
+      }
+    }
+  }
+}
