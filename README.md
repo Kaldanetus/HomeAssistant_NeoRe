@@ -1,5 +1,7 @@
 # NeoRé NeoApi v2 – Home Assistant custom integration
 
+**English** | [Čeština](README.cs.md)
+
 Version **0.3.4**.
 
 ## What changed in 0.3.4
