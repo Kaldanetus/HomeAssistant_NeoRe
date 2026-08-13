@@ -2,7 +2,11 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.4.0**.
+Version **0.4.1**.
+
+## What changed in 0.4.1
+
+The **Device – information** card (the one shown in the mobile companion app, with the "Firmware"/"Hardware"/serial-number fields) now carries PLC data instead of the integration release. Home Assistant fixes the labels on that card to "Firmware" and "Hardware" and the integration cannot rename them, so the values underneath were remapped instead: "Firmware" now shows `PLCPrgInfo.progVersion` (the control-program/software version), and "Hardware" continues to show the same `PLCInfo.version` value as before. The integration release is still available as `Version: 0.4.1` in the detailed device information, and the separate **Software**/**Firmware** diagnostic sensor entities are unchanged.
 
 ## What changed in 0.4.0
 

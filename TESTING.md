@@ -1,4 +1,4 @@
-# Testovací postup v0.4.0
+# Testovací postup v0.4.1
 
 ## 1. Ověření discovery
 
@@ -44,10 +44,14 @@ Po restartu otevřete **Nastavení → Zařízení a služby → NeoRé → Zař
 
 Očekávání:
 - existuje jedno zařízení NeoRé,
-- detailní informace zařízení nadále zobrazují `Verze: 0.4.0`,
-- karta **Zařízení – informace** zobrazuje `PLCPrgInfo.progVersion` jako
-  **Software** a nezměněnou hodnotu `PLCInfo.version` jako **Firmware**, pokud
-  regulátor tyto struktury nabízí,
+- detailní informace zařízení nadále zobrazují `Verze: 0.4.1`,
+- karta **Zařízení – informace** (v mobilní aplikaci) zobrazuje u pole
+  „Firmware“ hodnotu `PLCPrgInfo.progVersion` a u pole „Hardware“
+  nezměněnou hodnotu `PLCInfo.version`, pokud regulátor tyto struktury
+  nabízí; popisky polí „Firmware“/„Hardware“ jsou dané Home Assistantem a
+  integrace je nemění,
+- samostatné diagnostické entity **Software** (`PLCPrgInfo.progVersion`) a
+  **Firmware** (`PLCInfo.version`) se zobrazují v seznamu entit zařízení,
 - systémové informace zařízení obsahují typ a sériové číslo PLC,
 - zobrazí se jen proměnné přítomné v `getlist`,
 - `sazba` je v diagnostice a ve výchozím stavu zakázaná,

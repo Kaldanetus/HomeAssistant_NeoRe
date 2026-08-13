@@ -10,9 +10,11 @@ from homeassistant.helpers import device_registry as dr
 from .api import NeoApiClient
 from .const import (
     CONF_BASE_URL,
+    DATA_FW_VERSION,
     DATA_MODEL,
     DATA_PLC_TYPE,
     DATA_SERIAL_NUMBER,
+    DATA_SW_VERSION,
     DOMAIN,
     INTEGRATION_VERSION,
 )
@@ -50,9 +52,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: NeoReConfigEntry) -> boo
         manufacturer="NeoRé",
         model=str(coordinator.metadata.get(DATA_MODEL) or "NeoApi v2"),
         model_id=coordinator.metadata.get(DATA_PLC_TYPE),
-        # Keep the integration release in the device-detail "Version" field.
-        # PLC software and firmware are exposed as separate diagnostic entities.
-        sw_version=INTEGRATION_VERSION,
+        # HA's device card always labels sw_version "Firmware" and hw_version
+        # "Hardware" (fixed frontend strings, not overridable by the
+        # integration). Use those fixed slots for the PLC's own versions
+        # instead of the integration release: PLCPrgInfo.progversion (the
+        # control-program/software version) under "Firmware", and
+        # PLCInfo.version (the PLC's firmware version) under "Hardware".
+        sw_version=coordinator.metadata.get(DATA_SW_VERSION) or INTEGRATION_VERSION,
+        hw_version=coordinator.metadata.get(DATA_FW_VERSION),
         serial_number=coordinator.metadata.get(DATA_SERIAL_NUMBER),
         configuration_url=entry.data[CONF_BASE_URL],
     )

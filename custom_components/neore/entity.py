@@ -10,9 +10,11 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from . import NeoReConfigEntry
 from .const import (
     CONF_BASE_URL,
+    DATA_FW_VERSION,
     DATA_MODEL,
     DATA_PLC_TYPE,
     DATA_SERIAL_NUMBER,
+    DATA_SW_VERSION,
     DOMAIN,
     INTEGRATION_VERSION,
     OBJECT_POOL_DEFINITION,
@@ -39,7 +41,13 @@ class NeoReEntity(CoordinatorEntity[NeoReCoordinator]):
             manufacturer="NeoRé",
             model=str(model),
             model_id=self.coordinator.metadata.get(DATA_PLC_TYPE),
-            sw_version=INTEGRATION_VERSION,
+            # See __init__.py: the "Firmware"/"Hardware" labels on this card
+            # are fixed by Home Assistant, so the PLC's software and firmware
+            # versions are placed under them instead of the integration
+            # release.
+            sw_version=self.coordinator.metadata.get(DATA_SW_VERSION)
+            or INTEGRATION_VERSION,
+            hw_version=self.coordinator.metadata.get(DATA_FW_VERSION),
             serial_number=self.coordinator.metadata.get(DATA_SERIAL_NUMBER),
             configuration_url=self._entry.data[CONF_BASE_URL],
         )

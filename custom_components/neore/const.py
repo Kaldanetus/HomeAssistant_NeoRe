@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 DOMAIN = "neore"
-INTEGRATION_VERSION = "0.4.0"
+INTEGRATION_VERSION = "0.4.1"
 
 DEFAULT_USERNAME = "foxtrot"
 DEFAULT_PASSWORD = "foxtrotAP1"
