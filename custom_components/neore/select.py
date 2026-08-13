@@ -47,9 +47,10 @@ class NeoReOperatingModeSelect(NeoReEntity, SelectEntity):
     async def async_select_option(self, option: str) -> None:
         if option not in self.options:
             raise ValueError(f"Unsupported NeoRé operating mode: {option}")
+        name = self.coordinator.resolve_write_name(OBJECT_HEATING_MODE)
         await self.hass.async_add_executor_job(
             self.coordinator.api.set_object,
-            OBJECT_HEATING_MODE,
+            name,
             option == OPTION_HEATING,
         )
         await self.coordinator.async_request_refresh()

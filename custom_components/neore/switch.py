@@ -51,13 +51,15 @@ class NeoReBooleanSwitch(NeoReEntity, SwitchEntity):
         return value if isinstance(value, bool) else None
 
     async def async_turn_on(self, **kwargs) -> None:
+        name = self.coordinator.resolve_write_name(self._object_name)
         await self.hass.async_add_executor_job(
-            self.coordinator.api.set_object, self._object_name, True
+            self.coordinator.api.set_object, name, True
         )
         await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs) -> None:
+        name = self.coordinator.resolve_write_name(self._object_name)
         await self.hass.async_add_executor_job(
-            self.coordinator.api.set_object, self._object_name, False
+            self.coordinator.api.set_object, name, False
         )
         await self.coordinator.async_request_refresh()

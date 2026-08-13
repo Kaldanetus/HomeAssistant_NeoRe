@@ -2,7 +2,15 @@
 
 [English](README.md) | **Čeština**
 
-Verze **0.4.1**.
+Verze **0.4.3**.
+
+## Co se změnilo ve verzi 0.4.3
+
+Přidáno CI přes GitHub Actions: `.github/workflows/test.yml` spouští při každém pushi/PR novou sadu `pytest` testů v `tests/` (Python 3.12 a 3.13) a `.github/workflows/validate.yml` spouští oficiální kontroly `hassfest` a `hacs/action` (navíc jednou týdně naplánovaně, aby se odhalily i změny pravidel bez nového commitu). `api.py` – klient NeoApi v2 (zpracování URL/autentizace, `getobject`/`setobject`, čtení metadat zařízení) – je nově pokrytý offline jednotkovými testy (`tests/test_api.py`, bez sítě, bez závislosti na `homeassistant`). Postup lokálního spuštění a co zůstává záměrně jen ruční viz `TESTING.md`. Funkce `find_object_name`/`resolve_object_name` (case-insensitive vyhledání názvu objektu přidané ve verzi 0.4.2) se přesunuly z privátních pomocníků do malých, samostatně testovaných funkcí v `api.py`, které společně využívá API klient i koordinátor.
+
+## Co se změnilo ve verzi 0.4.2
+
+Opravy z revize projektu: český překlad binárního senzoru `sazba` ("Nízká"/"Blokován") už neodporuje vlastnímu popisu v dokumentaci ani anglickému překladu — nově zobrazuje „Povoleno“/„Blokováno“ v souladu s tímto README. Zápis do přepínačů, výběru režimu provozu a zapisovatelných čísel nyní nejprve zjistí skutečnou velikost písmen názvu objektu z `getlist`, stejně jako se to už dělá při čtení hodnot, místo aby vždy posílal napevno zapsaný název. `manifest.json` doplněn o `documentation`, `issue_tracker` a `codeowners`. Odstraněna duplicitní kopie `ekvitermni_krivka_plotly.yaml` v kořeni repozitáře (kanonický soubor je v `examples/`). Ze `strings.json`/překladů odstraněny nepoužívané položky `software_version`/`firmware_version`, protože tyto diagnostické senzory si název nastavují přímo v kódu.
 
 ## Co se změnilo ve verzi 0.4.1
 

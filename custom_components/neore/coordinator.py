@@ -9,7 +9,7 @@ from typing import Any
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import NeoApiClient, NeoApiError
+from .api import NeoApiClient, NeoApiError, find_object_name, resolve_object_name
 from .const import DEFAULT_SCAN_INTERVAL, DOMAIN, SUPPORTED_ROOT_OBJECTS
 
 _LOGGER = logging.getLogger(__name__)
@@ -33,16 +33,22 @@ class NeoReCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     def actual_object_name(self, requested: str) -> str | None:
         """Return the actual controller object name, case-insensitively."""
-        requested_lower = requested.lower()
-        for name in self.available_objects:
-            if name == requested or name.lower() == requested_lower:
-                return name
-        return None
+        return find_object_name(self.available_objects, requested)
 
     def has_object(self, requested: str) -> bool:
         """Return whether the controller advertised a root NeoApi object."""
         root = requested.split(".", 1)[0]
         return self.actual_object_name(root) is not None
+
+    def resolve_write_name(self, requested: str) -> str:
+        """Return `requested` with its root object cased as the controller advertised it.
+
+        Reads already tolerate capitalization differences in the controller's
+        responses (see NeoApiClient.get_object). Writes must send a name the
+        controller recognizes too, so resolve the root object through the same
+        case-insensitive lookup before building the setobject query.
+        """
+        return resolve_object_name(self.available_objects, requested)
 
     @property
     def supported_object_count(self) -> int:

@@ -63,12 +63,6 @@
       },
       "error_code": {
         "name": "Kód chyby nebo stavu"
-      },
-      "software_version": {
-        "name": "Software"
-      },
-      "firmware_version": {
-        "name": "Firmware"
       }
     },
     "binary_sensor": {
@@ -80,10 +74,10 @@
         }
       },
       "tariff_permission": {
-        "name": "Sazba",
+        "name": "Provoz dle sazby",
         "state": {
-          "on": "Nízká",
-          "off": "Blokován"
+          "on": "Povoleno",
+          "off": "Blokováno"
         }
       },
       "pool_heating": {

@@ -1,8 +1,12 @@
 {
   "domain": "neore",
   "name": "NeoRé",
-  "version": "0.4.1",
+  "version": "0.4.3",
   "config_flow": true,
   "integration_type": "device",
-  "iot_class": "local_polling"
+  "iot_class": "local_polling",
+  "codeowners": ["@Kaldanetus"],
+  "documentation": "https://github.com/Kaldanetus/HomeAssistant_NeoRe",
+  "issue_tracker": "https://github.com/Kaldanetus/HomeAssistant_NeoRe/issues",
+  "requirements": []
 }

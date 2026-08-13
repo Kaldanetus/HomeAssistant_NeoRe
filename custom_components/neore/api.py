@@ -89,13 +89,27 @@ def as_bool(value: Any) -> bool:
     raise NeoApiError(f"Unexpected boolean value: {value!r}")
 
 
-def _find_name(names: Iterable[str], requested: str) -> str | None:
+def find_object_name(names: Iterable[str], requested: str) -> str | None:
     """Find the controller's actual object name case-insensitively."""
     requested_lower = requested.lower()
     for name in names:
         if name == requested or name.lower() == requested_lower:
             return name
     return None
+
+
+def resolve_object_name(available: Iterable[str], requested: str) -> str:
+    """Return `requested` with its root object cased as the controller advertised it.
+
+    NeoApi object names are matched case-insensitively (see get_object). A
+    `requested` name may carry a "root.field" suffix (e.g. a flattened
+    NeoEkvValue field); only the root is looked up, and the suffix is kept
+    unchanged. Falls back to `requested` itself when the root is not found in
+    `available`, so callers can use the result unconditionally.
+    """
+    root, sep, rest = requested.partition(".")
+    actual_root = find_object_name(available, root) or root
+    return f"{actual_root}{sep}{rest}"
 
 
 class NeoApiClient:
@@ -213,7 +227,7 @@ class NeoApiClient:
         successful = 0
 
         for canonical_name in POLL_OBJECTS:
-            actual_name = _find_name(available_objects, canonical_name)
+            actual_name = find_object_name(available_objects, canonical_name)
             if actual_name is None:
                 continue
 
@@ -257,7 +271,7 @@ class NeoApiClient:
         metadata: dict[str, Any] = {}
 
         # NeoApi v2 documents IniNeoRe.ProDescr as the heat-pump type.
-        actual_info = _find_name(available_objects, OBJECT_NEORE_INFO)
+        actual_info = find_object_name(available_objects, OBJECT_NEORE_INFO)
         if actual_info is not None:
             neore_info = self.try_get_object(actual_info)
             if isinstance(neore_info, dict):
@@ -268,7 +282,7 @@ class NeoApiClient:
 
         # SimplyNeoVer is the API version for the SimplyNeo application. It is
         # deliberately NOT used as Home Assistant's device firmware version.
-        actual_api_version = _find_name(available_objects, OBJECT_SIMPLY_NEO_VERSION)
+        actual_api_version = find_object_name(available_objects, OBJECT_SIMPLY_NEO_VERSION)
         if actual_api_version is not None:
             api_version = self.try_get_object(actual_api_version)
             if api_version not in (None, ""):
@@ -277,7 +291,7 @@ class NeoApiClient:
         # PLCPrgInfo describes the application currently running in the PLC.
         # Keep all documented fields in metadata and use its version as the
         # Home Assistant device software version.
-        actual_program_info = _find_name(
+        actual_program_info = find_object_name(
             available_objects, OBJECT_PLC_PROGRAM_INFO
         )
         if actual_program_info is not None:
@@ -295,7 +309,7 @@ class NeoApiClient:
                         metadata[metadata_key] = str(value)
 
         # PLCInfo contains the controller identity and its firmware version.
-        actual_plc_info = _find_name(available_objects, OBJECT_PLC_INFO)
+        actual_plc_info = find_object_name(available_objects, OBJECT_PLC_INFO)
         if actual_plc_info is not None:
             plc_info = self.try_get_object(actual_plc_info)
             if isinstance(plc_info, dict):
