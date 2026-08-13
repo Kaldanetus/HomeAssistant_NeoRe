@@ -144,6 +144,8 @@ SENSOR_DEFINITIONS: tuple[NeoReSensorDefinition, ...] = (
 )
 
 METADATA_SENSOR_DEFINITIONS: tuple[NeoReMetadataSensorDefinition, ...] = (
+    # PLCPrgInfo.progVersion is presented as Software; PLCInfo.version keeps
+    # its value but is presented as Firmware in the device information card.
     NeoReMetadataSensorDefinition(DATA_SW_VERSION, "software_version"),
     NeoReMetadataSensorDefinition(DATA_FW_VERSION, "firmware_version"),
 )

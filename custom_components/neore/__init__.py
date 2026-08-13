@@ -50,6 +50,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: NeoReConfigEntry) -> boo
         manufacturer="NeoRé",
         model=str(coordinator.metadata.get(DATA_MODEL) or "NeoApi v2"),
         model_id=coordinator.metadata.get(DATA_PLC_TYPE),
+        # Keep the integration release in the device-detail "Version" field.
+        # PLC software and firmware are exposed as separate diagnostic entities.
         sw_version=INTEGRATION_VERSION,
         serial_number=coordinator.metadata.get(DATA_SERIAL_NUMBER),
         configuration_url=entry.data[CONF_BASE_URL],
