@@ -14,6 +14,7 @@ from .const import (
     DATA_PLC_TYPE,
     DATA_SERIAL_NUMBER,
     DOMAIN,
+    INTEGRATION_VERSION,
 )
 from .coordinator import NeoReCoordinator
 
@@ -49,6 +50,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: NeoReConfigEntry) -> boo
         manufacturer="NeoRé",
         model=str(coordinator.metadata.get(DATA_MODEL) or "NeoApi v2"),
         model_id=coordinator.metadata.get(DATA_PLC_TYPE),
+        sw_version=INTEGRATION_VERSION,
         serial_number=coordinator.metadata.get(DATA_SERIAL_NUMBER),
         configuration_url=entry.data[CONF_BASE_URL],
     )

@@ -2,7 +2,11 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.3.7**.
+Version **0.3.9**.
+
+## What changed in 0.3.9
+
+The GitHub integration version is shown in the Home Assistant device system information again. The control-program and PLC versions remain available as separate diagnostic sensors so that the individual version values are not confused.
 
 ## What changed in 0.3.7
 
