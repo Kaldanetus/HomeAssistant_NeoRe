@@ -110,22 +110,22 @@
     },
     "number": {
       "dhw_setpoint": {
-        "name": "Požadovaná teplota TUV"
+        "name": "Pož. teplota TUV"
       },
       "room_setpoint": {
-        "name": "Požadovaná teplota objektu"
+        "name": "Pož. teplota objektu"
       },
       "water_correction": {
         "name": "Korekce"
       },
       "cooling_water_setpoint": {
-        "name": "Požadovaná teplota chladicí vody"
+        "name": "Pož. teplota chladicí vody"
       },
       "pool_water_temperature": {
-        "name": "Teplota vody pro ohřev bazénu"
+        "name": "Pož. teplota pro ohřev bazénu"
       },
       "pool_setpoint": {
-        "name": "Požadovaná teplota bazénu"
+        "name": "Pož. teplota bazénu"
       },
       "heating_curve_a": {
         "name": "Ekv. křivka při −20 °C"

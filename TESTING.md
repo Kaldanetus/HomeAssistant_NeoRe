@@ -18,6 +18,7 @@ curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?OuPW
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?pow1st"
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?BazDef"
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?InTbaz"
+curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?bazenmainon"
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?bazenon"
 ```
 
@@ -50,7 +51,7 @@ Očekávání:
 - `ActFlow` se ve výchozím stavu zobrazuje na dvě desetinná místa,
 - `korekce` se zobrazuje jako posuvník s názvem „Korekce“,
 - pokud je `BazDef` nepravdivé, zobrazí se dostupné bazénové prvky
-  `InTbaz`, `mazenmainon`, `tbazenwat`, `tbazenreq` a `bazenon`,
+  `InTbaz`, `bazenmainon`, `tbazenwat`, `tbazenreq` a `bazenon`,
 - pokud je `BazDef` pravdivé, nezobrazí se žádný bazénový prvek,
 - při odpojení PLC se zařízení/entity stanou nedostupné,
 - dočasná chyba jedné proměnné neshodí ostatní entity.
