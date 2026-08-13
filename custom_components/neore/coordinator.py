@@ -9,7 +9,7 @@ from typing import Any
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import NeoApiClient, NeoApiError
+from .api import NeoApiClient, NeoApiError, find_object_name, resolve_object_name
 from .const import DEFAULT_SCAN_INTERVAL, DOMAIN, SUPPORTED_ROOT_OBJECTS
 
 _LOGGER = logging.getLogger(__name__)
@@ -33,11 +33,7 @@ class NeoReCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     def actual_object_name(self, requested: str) -> str | None:
         """Return the actual controller object name, case-insensitively."""
-        requested_lower = requested.lower()
-        for name in self.available_objects:
-            if name == requested or name.lower() == requested_lower:
-                return name
-        return None
+        return find_object_name(self.available_objects, requested)
 
     def has_object(self, requested: str) -> bool:
         """Return whether the controller advertised a root NeoApi object."""
@@ -52,9 +48,7 @@ class NeoReCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         controller recognizes too, so resolve the root object through the same
         case-insensitive lookup before building the setobject query.
         """
-        root, sep, rest = requested.partition(".")
-        actual_root = self.actual_object_name(root) or root
-        return f"{actual_root}{sep}{rest}"
+        return resolve_object_name(self.available_objects, requested)
 
     @property
     def supported_object_count(self) -> int:

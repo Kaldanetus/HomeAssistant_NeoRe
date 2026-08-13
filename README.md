@@ -2,7 +2,11 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.4.2**.
+Version **0.4.3**.
+
+## What changed in 0.4.3
+
+Added GitHub Actions CI: `.github/workflows/test.yml` runs the new `pytest` suite in `tests/` on every push/PR (Python 3.12 and 3.13), and `.github/workflows/validate.yml` runs the official `hassfest` and `hacs/action` checks (plus a weekly schedule so rule changes upstream get caught even without a new commit). `api.py` — the NeoApi v2 client (URL/auth handling, `getobject`/`setobject`, device-metadata parsing) — is now covered by an offline unit test suite (`tests/test_api.py`, no network, no `homeassistant` dependency). See `TESTING.md` for how to run it locally and what is intentionally still manual. `find_object_name`/`resolve_object_name` (the case-insensitive object-name lookup added in 0.4.2) moved from private helpers into small, independently tested functions in `api.py`, reused by both the API client and the coordinator.
 
 ## What changed in 0.4.2
 

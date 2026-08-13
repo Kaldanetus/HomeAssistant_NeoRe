@@ -1,4 +1,37 @@
-# Testovací postup v0.4.2
+# Testovací postup v0.4.3
+
+## 0. Automatizované testy a CI
+
+`custom_components/neore/api.py` (klient NeoApi v2 – parsování URL, digest/basic
+auth, čtení a zápis objektů, sestavení device metadat) je záměrně bez závislosti
+na `homeassistant` a je pokryt jednotkovými testy v `tests/`. Testy běží zcela
+offline, žádné HTTP volání do regulátoru se neprovádí (`NeoApiClient._open`
+resp. `get_object`/`try_get_object` jsou v testech nahrazeny přes
+`monkeypatch`).
+
+Lokální spuštění:
+
+```bash
+pip install -r requirements_test.txt
+pytest tests/ -v
+```
+
+Přes GitHub Actions se testy i validace spouští automaticky:
+
+- **`.github/workflows/test.yml`** – `pytest tests/` na Python 3.12 a 3.13 při
+  každém pushi/PR.
+- **`.github/workflows/validate.yml`** – oficiální `hassfest` (validace
+  `manifest.json` a struktury integrace) a `hacs/action` (validace pro
+  distribuci přes HACS), navíc jednou týdně naplánovaně, aby se odhalily
+  změny pravidel i bez nového commitu.
+
+Zbytek tohoto dokumentu popisuje ruční ověření proti reálnému regulátoru NeoRé,
+které automatizované testy nenahrazují (entity Home Assistantu, chování
+`getlist`/`getobject`/`setobject` na skutečném PLC). Případné rozšíření
+jednotkových testů i na `coordinator.py`/platformy (`sensor.py`, `switch.py`
+atd.) by vyžadovalo balíček `pytest-homeassistant-custom-component`, protože
+tyto moduly importují `homeassistant` napřímo – zatím nebyl přidán, aby CI
+zůstalo rychlé a bez těžké závislosti; viz poznámka v README.
 
 ## 1. Ověření discovery
 
@@ -44,7 +77,7 @@ Po restartu otevřete **Nastavení → Zařízení a služby → NeoRé → Zař
 
 Očekávání:
 - existuje jedno zařízení NeoRé,
-- detailní informace zařízení nadále zobrazují `Verze: 0.4.2`,
+- detailní informace zařízení nadále zobrazují `Verze: 0.4.3`,
 - karta **Zařízení – informace** (v mobilní aplikaci) zobrazuje u pole
   „Firmware“ hodnotu `PLCPrgInfo.progVersion` a u pole „Hardware“
   nezměněnou hodnotu `PLCInfo.version`, pokud regulátor tyto struktury

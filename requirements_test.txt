@@ -1,0 +1,6 @@
+# Test-only dependencies for custom_components/neore.
+#
+# api.py has no Home Assistant import (see its module docstring), so the
+# unit tests in tests/ only need plain pytest — no `homeassistant` package,
+# no network access.
+pytest>=8.0
