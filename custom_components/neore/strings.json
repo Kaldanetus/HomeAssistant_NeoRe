@@ -63,12 +63,6 @@
       },
       "error_code": {
         "name": "Error or status code"
-      },
-      "software_version": {
-        "name": "Software"
-      },
-      "firmware_version": {
-        "name": "Firmware"
       }
     },
     "binary_sensor": {

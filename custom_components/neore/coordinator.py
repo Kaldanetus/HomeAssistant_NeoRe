@@ -44,6 +44,18 @@ class NeoReCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         root = requested.split(".", 1)[0]
         return self.actual_object_name(root) is not None
 
+    def resolve_write_name(self, requested: str) -> str:
+        """Return `requested` with its root object cased as the controller advertised it.
+
+        Reads already tolerate capitalization differences in the controller's
+        responses (see NeoApiClient.get_object). Writes must send a name the
+        controller recognizes too, so resolve the root object through the same
+        case-insensitive lookup before building the setobject query.
+        """
+        root, sep, rest = requested.partition(".")
+        actual_root = self.actual_object_name(root) or root
+        return f"{actual_root}{sep}{rest}"
+
     @property
     def supported_object_count(self) -> int:
         """Count supported root objects present on this controller."""

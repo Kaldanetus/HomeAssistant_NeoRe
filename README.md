@@ -2,7 +2,11 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.4.1**.
+Version **0.4.2**.
+
+## What changed in 0.4.2
+
+Project review fixes: the Czech `sazba` binary sensor translation ("Nízká"/"Blokován") no longer contradicts its own documented meaning and the English translation — it now reads "Povoleno"/"Blokováno" (Permitted/Blocked), matching this README. Writes to switches, the operating-mode select, and writable numbers now resolve the controller's actual object-name capitalization from `getlist` first, the same tolerance already applied when reading values, instead of always sending the hardcoded name. `manifest.json` gained `documentation`, `issue_tracker`, and `codeowners`. The duplicate `ekvitermni_krivka_plotly.yaml` copy at the repository root was removed (the canonical file lives in `examples/`). Unused `software_version`/`firmware_version` translation entries were removed from `strings.json`/translations, since those diagnostic sensors already set their name directly in code.
 
 ## What changed in 0.4.1
 

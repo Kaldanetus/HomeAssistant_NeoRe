@@ -1,4 +1,4 @@
-# Testovací postup v0.4.1
+# Testovací postup v0.4.2
 
 ## 1. Ověření discovery
 
@@ -44,7 +44,7 @@ Po restartu otevřete **Nastavení → Zařízení a služby → NeoRé → Zař
 
 Očekávání:
 - existuje jedno zařízení NeoRé,
-- detailní informace zařízení nadále zobrazují `Verze: 0.4.1`,
+- detailní informace zařízení nadále zobrazují `Verze: 0.4.2`,
 - karta **Zařízení – informace** (v mobilní aplikaci) zobrazuje u pole
   „Firmware“ hodnotu `PLCPrgInfo.progVersion` a u pole „Hardware“
   nezměněnou hodnotu `PLCInfo.version`, pokud regulátor tyto struktury

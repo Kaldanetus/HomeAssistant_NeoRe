@@ -177,7 +177,8 @@ class NeoReTemperatureNumber(NeoReEntity, NumberEntity):
             raise ValueError(
                 f"Value {value} is outside NeoRé range {min_value}..{max_value}"
             )
+        name = self.coordinator.resolve_write_name(self._definition.object_name)
         await self.hass.async_add_executor_job(
-            self.coordinator.api.set_object, self._definition.object_name, value
+            self.coordinator.api.set_object, name, value
         )
         await self.coordinator.async_request_refresh()
