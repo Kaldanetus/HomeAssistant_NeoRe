@@ -2,7 +2,11 @@
 
 [English](README.md) | **Čeština**
 
-Verze **0.4.0**.
+Verze **0.4.1**.
+
+## Co se změnilo ve verzi 0.4.1
+
+Karta **Zařízení – informace** (ta, kterou zobrazuje mobilní aplikace s poli „Firmware“/„Hardware“/sériové číslo) nyní místo verze integrace zobrazuje údaje z PLC. Home Assistant má popisky této karty pevně dané jako „Firmware“ a „Hardware“ a integrace je nemůže přejmenovat, takže se přemapovaly hodnoty pod nimi: „Firmware“ nyní zobrazuje `PLCPrgInfo.progVersion` (verzi řídicího programu/softwaru) a „Hardware“ nadále zobrazuje stejnou hodnotu `PLCInfo.version` jako dříve. Verze integrace zůstává dostupná jako `Verze: 0.4.1` v detailních informacích zařízení a samostatné diagnostické entity **Software**/**Firmware** se nemění.
 
 ## Co se změnilo ve verzi 0.4.0
 
