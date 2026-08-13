@@ -8,7 +8,7 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import NeoReConfigEntry
-from .const import CONF_BASE_URL, DATA_MODEL, DOMAIN
+from .const import CONF_BASE_URL, DATA_MODEL, DOMAIN, OBJECT_POOL_DEFINITION
 from .coordinator import NeoReCoordinator
 
 
@@ -48,3 +48,8 @@ def float_or_none(value: Any) -> float | None:
         return float(value)
     except (TypeError, ValueError):
         return None
+
+
+def pool_is_exposed(coordinator: NeoReCoordinator) -> bool:
+    """Return whether pool entities should be exposed for this controller."""
+    return coordinator.data.get(OBJECT_POOL_DEFINITION) is not True

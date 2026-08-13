@@ -43,6 +43,9 @@
       "room_input_temperature": {
         "name": "Teplota objektu – vstup"
       },
+      "pool_temperature": {
+        "name": "Teplota bazénu"
+      },
       "flow_rate": {
         "name": "Průtok topné vody"
       },
@@ -76,6 +79,13 @@
           "on": "Nízká",
           "off": "Blokován"
         }
+      },
+      "pool_heating": {
+        "name": "Ohřev bazénu",
+        "state": {
+          "on": "Ohřívá",
+          "off": "Neohřívá"
+        }
       }
     },
     "switch": {
@@ -84,6 +94,9 @@
       },
       "dhw_enable": {
         "name": "Povolení ohřevu TUV"
+      },
+      "pool_enable": {
+        "name": "Povolení ohřevu bazénu"
       }
     },
     "select": {
@@ -107,6 +120,12 @@
       },
       "cooling_water_setpoint": {
         "name": "Požadovaná teplota chladicí vody"
+      },
+      "pool_water_temperature": {
+        "name": "Teplota vody pro ohřev bazénu"
+      },
+      "pool_setpoint": {
+        "name": "Požadovaná teplota bazénu"
       },
       "heating_curve_a": {
         "name": "Ekv. křivka při −20 °C"

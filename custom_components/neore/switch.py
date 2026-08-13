@@ -7,8 +7,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import NeoReConfigEntry
-from .const import OBJECT_DHW_ENABLE, OBJECT_MAIN_ENABLE
-from .entity import NeoReEntity
+from .const import OBJECT_DHW_ENABLE, OBJECT_MAIN_ENABLE, OBJECT_POOL_ENABLE
+from .entity import NeoReEntity, pool_is_exposed
 
 
 async def async_setup_entry(
@@ -27,13 +27,19 @@ async def async_setup_entry(
         entities.append(
             NeoReBooleanSwitch(entry, coordinator, OBJECT_DHW_ENABLE, "dhw_enable")
         )
+    if coordinator.has_object(OBJECT_POOL_ENABLE) and pool_is_exposed(coordinator):
+        entities.append(
+            NeoReBooleanSwitch(entry, coordinator, OBJECT_POOL_ENABLE, "pool_enable")
+        )
     async_add_entities(entities)
 
 
 class NeoReBooleanSwitch(NeoReEntity, SwitchEntity):
     """Writable NeoApi boolean switch."""
 
-    def __init__(self, entry, coordinator, object_name: str, translation_key: str) -> None:
+    def __init__(
+        self, entry, coordinator, object_name: str, translation_key: str
+    ) -> None:
         super().__init__(entry, coordinator)
         self._object_name = object_name
         self._attr_unique_id = f"{entry.entry_id}_{object_name}"
