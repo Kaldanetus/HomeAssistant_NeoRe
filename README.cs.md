@@ -2,11 +2,11 @@
 
 [English](README.md) | **Čeština**
 
-Verze **0.3.6**.
+Verze **0.3.7**.
 
-## Co se změnilo ve verzi 0.3.6
+## Co se změnilo ve verzi 0.3.7
 
-Verze 0.3.6 přidává volitelnou podporu bazénu: teplotu bazénu, teplotu vody pro ohřev a požadovanou teplotu, přepínač povolení ohřevu a stavový senzor aktivního ohřevu. Bazénové entity se zobrazí pouze tehdy, když je `BazDef` nepravdivé a regulátor inzeruje odpovídající objekty. Verze také opravuje objekt pro povolení ohřevu bazénu na `bazenmainon` a zkracuje české názvy nastavení teplot.
+Verze 0.3.7 načítá nové struktury `PLCPrgInfo` a `PLCInfo` popsané v Neo API. V systémových informacích zařízení Home Assistantu se díky nim zobrazí typ a sériové číslo PLC, verze řídicího programu a verze PLC. Údaje zůstávají volitelné, takže starší regulátory bez těchto struktur fungují beze změny.
 
 Integrace při každém načtení nebo opětovném načtení integrace v Home Assistantu zjišťuje dostupné funkce z `/tecoapi/getlist`. Vytvoří pouze entity, které připojený regulátor skutečně poskytuje. Jedna verze integrace tak podporuje různé generace regulátorů a softwaru NeoRé.
 

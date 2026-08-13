@@ -55,9 +55,20 @@ OBJECT_POOL_HEATING = "bazenon"
 # Optional metadata published by NeoApi v2.
 OBJECT_NEORE_INFO = "IniNeoRe"
 OBJECT_SIMPLY_NEO_VERSION = "SimplyNeoVer"
+OBJECT_PLC_PROGRAM_INFO = "PLCPrgInfo"
+OBJECT_PLC_INFO = "PLCInfo"
 
 DATA_MODEL = "_model"
 DATA_API_VERSION = "_api_version"
+DATA_SW_VERSION = "_sw_version"
+DATA_PROGRAM_NAME = "_program_name"
+DATA_PROGRAM_COMPILED = "_program_compiled"
+DATA_PROGRAM_STAMP = "_program_stamp"
+DATA_PLC_FAMILY = "_plc_family"
+DATA_PLC_TYPE = "_plc_type"
+DATA_PLC_SPECIFICATION = "_plc_specification"
+DATA_HW_VERSION = "_hw_version"
+DATA_SERIAL_NUMBER = "_serial_number"
 
 BOOLEAN_OBJECTS: frozenset[str] = frozenset(
     {
@@ -106,5 +117,11 @@ POLL_OBJECTS: tuple[str, ...] = (
 )
 
 SUPPORTED_ROOT_OBJECTS: frozenset[str] = frozenset(
-    (*POLL_OBJECTS, OBJECT_NEORE_INFO, OBJECT_SIMPLY_NEO_VERSION)
+    (
+        *POLL_OBJECTS,
+        OBJECT_NEORE_INFO,
+        OBJECT_SIMPLY_NEO_VERSION,
+        OBJECT_PLC_PROGRAM_INFO,
+        OBJECT_PLC_INFO,
+    )
 )

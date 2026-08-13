@@ -17,10 +17,21 @@ from urllib.request import (
 from .const import (
     BOOLEAN_OBJECTS,
     DATA_API_VERSION,
+    DATA_HW_VERSION,
     DATA_MODEL,
+    DATA_PLC_FAMILY,
+    DATA_PLC_SPECIFICATION,
+    DATA_PLC_TYPE,
+    DATA_PROGRAM_COMPILED,
+    DATA_PROGRAM_NAME,
+    DATA_PROGRAM_STAMP,
+    DATA_SERIAL_NUMBER,
+    DATA_SW_VERSION,
     HEATING_CURVE_FIELDS,
     OBJECT_HEATING_CURVE,
     OBJECT_NEORE_INFO,
+    OBJECT_PLC_INFO,
+    OBJECT_PLC_PROGRAM_INFO,
     OBJECT_SIMPLY_NEO_VERSION,
     POLL_OBJECTS,
 )
@@ -262,6 +273,43 @@ class NeoApiClient:
             api_version = self.try_get_object(actual_api_version)
             if api_version not in (None, ""):
                 metadata[DATA_API_VERSION] = str(api_version)
+
+        # PLCPrgInfo describes the application currently running in the PLC.
+        # Keep all documented fields in metadata and use its version as the
+        # Home Assistant device software version.
+        actual_program_info = _find_name(
+            available_objects, OBJECT_PLC_PROGRAM_INFO
+        )
+        if actual_program_info is not None:
+            program_info = self.try_get_object(actual_program_info)
+            if isinstance(program_info, dict):
+                program_fields = {
+                    "progname": DATA_PROGRAM_NAME,
+                    "progversion": DATA_SW_VERSION,
+                    "compiled": DATA_PROGRAM_COMPILED,
+                    "stamp": DATA_PROGRAM_STAMP,
+                }
+                for key, value in program_info.items():
+                    metadata_key = program_fields.get(str(key).lower())
+                    if metadata_key is not None and value not in (None, ""):
+                        metadata[metadata_key] = str(value)
+
+        # PLCInfo contains the controller identity and its firmware version.
+        actual_plc_info = _find_name(available_objects, OBJECT_PLC_INFO)
+        if actual_plc_info is not None:
+            plc_info = self.try_get_object(actual_plc_info)
+            if isinstance(plc_info, dict):
+                plc_fields = {
+                    "family": DATA_PLC_FAMILY,
+                    "plctype": DATA_PLC_TYPE,
+                    "specif": DATA_PLC_SPECIFICATION,
+                    "version": DATA_HW_VERSION,
+                    "serialnum": DATA_SERIAL_NUMBER,
+                }
+                for key, value in plc_info.items():
+                    metadata_key = plc_fields.get(str(key).lower())
+                    if metadata_key is not None and value not in (None, ""):
+                        metadata[metadata_key] = str(value)
 
         return metadata
 

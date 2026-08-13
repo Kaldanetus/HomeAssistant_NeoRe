@@ -8,7 +8,15 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 
 from .api import NeoApiClient
-from .const import CONF_BASE_URL, DATA_MODEL, DOMAIN
+from .const import (
+    CONF_BASE_URL,
+    DATA_HW_VERSION,
+    DATA_MODEL,
+    DATA_PLC_TYPE,
+    DATA_SERIAL_NUMBER,
+    DATA_SW_VERSION,
+    DOMAIN,
+)
 from .coordinator import NeoReCoordinator
 
 PLATFORMS: list[Platform] = [
@@ -42,6 +50,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: NeoReConfigEntry) -> boo
         name="NeoRé tepelné čerpadlo",
         manufacturer="NeoRé",
         model=str(coordinator.metadata.get(DATA_MODEL) or "NeoApi v2"),
+        model_id=coordinator.metadata.get(DATA_PLC_TYPE),
+        sw_version=coordinator.metadata.get(DATA_SW_VERSION),
+        hw_version=coordinator.metadata.get(DATA_HW_VERSION),
+        serial_number=coordinator.metadata.get(DATA_SERIAL_NUMBER),
         configuration_url=entry.data[CONF_BASE_URL],
     )
 

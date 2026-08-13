@@ -2,11 +2,11 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.3.6**.
+Version **0.3.7**.
 
-## What changed in 0.3.6
+## What changed in 0.3.7
 
-Version 0.3.6 adds optional pool support: pool temperature, heating-water temperature and setpoint, a pool-heating enable switch, and an active-heating status sensor. Pool entities are exposed only when `BazDef` is false and the corresponding objects are advertised by the controller. It also corrects the pool-heating enable object to `bazenmainon` and shortens the Czech temperature-setting labels.
+Version 0.3.7 reads the new `PLCPrgInfo` and `PLCInfo` structures documented by Neo API. They add the PLC type and serial number, control-program version, and PLC version to the Home Assistant device system information. The data remains optional, so older controllers that do not expose these structures continue to work unchanged.
 
 The integration discovers capabilities from `/tecoapi/getlist` on every Home Assistant integration load/reload. Only entities actually exposed by the connected controller are created. This allows one integration version to support different NeoRé controller/software generations.
 

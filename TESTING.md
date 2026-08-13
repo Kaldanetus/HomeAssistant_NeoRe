@@ -1,4 +1,4 @@
-# Testovací postup v0.3.6
+# Testovací postup v0.3.7
 
 ## 1. Ověření discovery
 
@@ -16,6 +16,8 @@ curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?NeoE
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?heating_int"
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?OuPWM1"
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?pow1st"
+curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?PLCPrgInfo"
+curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?PLCInfo"
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?BazDef"
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?InTbaz"
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?bazenmainon"
@@ -42,6 +44,8 @@ Po restartu otevřete **Nastavení → Zařízení a služby → NeoRé → Zař
 
 Očekávání:
 - existuje jedno zařízení NeoRé,
+- systémové informace zařízení obsahují typ a sériové číslo PLC, verzi programu
+  z `PLCPrgInfo` a verzi PLC z `PLCInfo`, pokud regulátor tyto struktury nabízí,
 - zobrazí se jen proměnné přítomné v `getlist`,
 - `sazba` je v diagnostice a ve výchozím stavu zakázaná,
 - žádný čtecí teplotní senzor se nevytvoří, pokud je při načtení integrace jeho hodnota `> 100 °C`,
