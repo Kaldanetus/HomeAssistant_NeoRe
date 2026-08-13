@@ -14,6 +14,7 @@ from .const import (
     DATA_PLC_TYPE,
     DATA_SERIAL_NUMBER,
     DOMAIN,
+    INTEGRATION_VERSION,
     OBJECT_POOL_DEFINITION,
 )
 from .coordinator import NeoReCoordinator
@@ -38,6 +39,7 @@ class NeoReEntity(CoordinatorEntity[NeoReCoordinator]):
             manufacturer="NeoRé",
             model=str(model),
             model_id=self.coordinator.metadata.get(DATA_PLC_TYPE),
+            sw_version=INTEGRATION_VERSION,
             serial_number=self.coordinator.metadata.get(DATA_SERIAL_NUMBER),
             configuration_url=self._entry.data[CONF_BASE_URL],
         )

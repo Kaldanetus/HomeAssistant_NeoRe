@@ -1,4 +1,4 @@
-# Testovací postup v0.3.7
+# Testovací postup v0.3.9
 
 ## 1. Ověření discovery
 
@@ -44,6 +44,7 @@ Po restartu otevřete **Nastavení → Zařízení a služby → NeoRé → Zař
 
 Očekávání:
 - existuje jedno zařízení NeoRé,
+- systémové informace zařízení zobrazují verzi integrace `0.3.9`,
 - systémové informace zařízení obsahují typ a sériové číslo PLC, verzi programu
   z `PLCPrgInfo` a verzi PLC z `PLCInfo`, pokud regulátor tyto struktury nabízí,
 - zobrazí se jen proměnné přítomné v `getlist`,

@@ -2,7 +2,11 @@
 
 [English](README.md) | **Čeština**
 
-Verze **0.3.7**.
+Verze **0.3.9**.
+
+## Co se změnilo ve verzi 0.3.9
+
+Verze integrace z GitHubu se znovu zobrazuje v systémových informacích zařízení Home Assistantu. Verze řídicího programu a PLC zůstávají dostupné jako samostatné diagnostické senzory, aby se jednotlivé údaje nezaměňovaly.
 
 ## Co se změnilo ve verzi 0.3.7
 
