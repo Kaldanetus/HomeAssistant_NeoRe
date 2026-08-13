@@ -2,7 +2,11 @@
 
 [English](README.md) | **Čeština**
 
-Verze **0.3.9**.
+Verze **0.4.0**.
+
+## Co se změnilo ve verzi 0.4.0
+
+Diagnostické položky na kartě **Zařízení – informace** nyní nastavují názvy také přímo ve výkonném kódu: **Software** zobrazuje `PLCPrgInfo.progVersion` a **Firmware** zobrazuje beze změny `PLCInfo.version`. Verze integrace v detailních informacích zařízení zůstává zobrazena samostatně jako `Verze: 0.4.0`.
 
 ## Co se změnilo ve verzi 0.3.9
 

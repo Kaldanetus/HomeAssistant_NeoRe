@@ -59,7 +59,7 @@ class NeoReMetadataSensorDefinition:
     """Definition of a version shown in the device diagnostics."""
 
     metadata_key: str
-    translation_key: str
+    name: str
 
 
 SENSOR_DEFINITIONS: tuple[NeoReSensorDefinition, ...] = (
@@ -146,8 +146,8 @@ SENSOR_DEFINITIONS: tuple[NeoReSensorDefinition, ...] = (
 METADATA_SENSOR_DEFINITIONS: tuple[NeoReMetadataSensorDefinition, ...] = (
     # PLCPrgInfo.progVersion is presented as Software; PLCInfo.version keeps
     # its value but is presented as Firmware in the device information card.
-    NeoReMetadataSensorDefinition(DATA_SW_VERSION, "software_version"),
-    NeoReMetadataSensorDefinition(DATA_FW_VERSION, "firmware_version"),
+    NeoReMetadataSensorDefinition(DATA_SW_VERSION, "Software"),
+    NeoReMetadataSensorDefinition(DATA_FW_VERSION, "Firmware"),
 )
 
 
@@ -269,7 +269,8 @@ class NeoReMetadataSensor(NeoReEntity, SensorEntity):
         super().__init__(entry, coordinator)
         self._definition = definition
         self._attr_unique_id = f"{entry.entry_id}_{definition.metadata_key.lstrip('_')}"
-        self._attr_translation_key = definition.translation_key
+        # Keep the requested labels independent of a stale translation cache in HA.
+        self._attr_name = definition.name
 
     @property
     def native_value(self) -> str | None:

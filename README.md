@@ -2,7 +2,11 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.3.9**.
+Version **0.4.0**.
+
+## What changed in 0.4.0
+
+The diagnostic entries in the **Device – information** card now also set their names directly in executable code: **Software** displays `PLCPrgInfo.progVersion`, while **Firmware** continues to display the unchanged `PLCInfo.version`. The integration release remains separate in the detailed device information as `Version: 0.4.0`.
 
 ## What changed in 0.3.9
 
