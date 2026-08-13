@@ -49,7 +49,7 @@ OBJECT_HEATING_MODE = "heating_int"
 OBJECT_ERROR_BLOCK = "errorblock"
 OBJECT_ERROR_CODE = "errcode"
 OBJECT_POOL_DEFINITION = "BazDef"
-OBJECT_POOL_ENABLE = "mazenmainon"
+OBJECT_POOL_ENABLE = "bazenmainon"
 OBJECT_POOL_HEATING = "bazenon"
 
 # Optional metadata published by NeoApi v2.
