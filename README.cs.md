@@ -2,11 +2,11 @@
 
 [English](README.md) | **Čeština**
 
-Verze **0.3.5**.
+Verze **0.3.6**.
 
-## Co se změnilo ve verzi 0.3.5
+## Co se změnilo ve verzi 0.3.6
 
-Verze 0.3.5 zkracuje české názvy korekce a bodů ekvitermní křivky, zobrazuje korekci jako posuvník a nastavuje výchozí přesnost průtoku topné vody na dvě desetinná místa.
+Verze 0.3.6 přidává volitelnou podporu bazénu: teplotu bazénu, teplotu vody pro ohřev a požadovanou teplotu, přepínač povolení ohřevu a stavový senzor aktivního ohřevu. Bazénové entity se zobrazí pouze tehdy, když je `BazDef` nepravdivé a regulátor inzeruje odpovídající objekty. Verze také opravuje objekt pro povolení ohřevu bazénu na `bazenmainon` a zkracuje české názvy nastavení teplot.
 
 Integrace při každém načtení nebo opětovném načtení integrace v Home Assistantu zjišťuje dostupné funkce z `/tecoapi/getlist`. Vytvoří pouze entity, které připojený regulátor skutečně poskytuje. Jedna verze integrace tak podporuje různé generace regulátorů a softwaru NeoRé.
 
@@ -26,6 +26,7 @@ Všechny entity zůstávají seskupené právě pod jedním zařízením Home As
 - `InTtopv` – teplota topné vody
 - `InTtuv` – teplota teplé užitkové vody (TUV)
 - `InTobj` – nezpracovaná vstupní pokojová teplota / teplota objektu
+- `InTbaz` – teplota bazénu (volitelná; pouze při povolené podpoře bazénu)
 - `ActFlow` – průtok topné vody, m³/h
 - `ActHeaPow` – topný výkon, kW
 - `HeatSumCnt` – dodaná tepelná energie, kWh; dlouhodobé statistiky jsou povoleny
@@ -41,6 +42,8 @@ Senzory teploty určené pouze ke čtení se vytvoří jen tehdy, pokud je jejic
 - `tobjekreq` – požadovaná pokojová teplota, 10…30 °C; vytvoří se pouze při `tobj <= 100`
 - `korekce` – korekce teploty vody, ±9 °C při vytápění a ±3 °C při chlazení
 - `tempcoolw` – požadovaná teplota chladicí vody, 15…20 °C
+- `tbazenwat` – teplota vody pro ohřev bazénu, 10…40 °C (volitelná)
+- `tbazenreq` – požadovaná teplota bazénu, 10…40 °C (volitelná)
 - `NeoEkvValue.TempEkvA` – bod křivky pro −20 °C, 20…60 °C
 - `NeoEkvValue.TempEkvB` – bod křivky pro −7 °C, 20…60 °C
 - `NeoEkvValue.TempEkvC` – bod křivky pro +6 °C, 20…60 °C
@@ -52,16 +55,20 @@ Z objektu `NeoEkvValue` jsou zpřístupněna pouze čtyři zapisovatelná pole `
 
 - `chodhlavni` – přepínač: povolení vytápění/chlazení
 - `tuvmainon` – přepínač: povolení ohřevu TUV
+- `bazenmainon` – přepínač: povolení ohřevu bazénu (volitelný)
 - `heating_int` – výběr: Vytápění / Chlazení (`1 = vytápění`)
 
 ### Chyby a diagnostika
 
 - `errorblock` – binární senzor problému; zapnutý stav znamená, že vážná chyba blokuje provoz
 - `sazba` – diagnostický binární senzor, **ve výchozím nastavení vypnutý**; zapnutý stav znamená, že jsou procesy řízené tarifem povoleny, vypnutý stav znamená, že jsou blokovány
+- `bazenon` – binární senzor ohřevu; zapnutý stav znamená, že právě probíhá ohřev bazénu (volitelný)
 
 ## Zjišťování dostupných funkcí
 
 Dotaz `getlist` se provádí pouze při načtení nebo opětovném načtení integrace, nikoli v každém patnáctisekundovém cyklu aktualizace. Po aktualizaci softwaru NeoRé, která přidá nebo odebere objekty NeoApi, proto integraci znovu načtěte nebo restartujte Home Assistant.
+
+Bazénové entity se vytvoří pouze tehdy, když je `BazDef` nepravdivé. Každá bazénová entita musí být současně přítomná v `getlist`, takže regulátory bez podpory bazénu nedostanou prázdné ani nedostupné bazénové ovládací prvky.
 
 ## Instalace / aktualizace
 

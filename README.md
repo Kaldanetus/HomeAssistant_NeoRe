@@ -2,11 +2,11 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.3.5**.
+Version **0.3.6**.
 
-## What changed in 0.3.5
+## What changed in 0.3.6
 
-Version 0.3.5 shortens the Czech labels for the correction and heating-curve points, presents the correction as a slider, and defaults the heating-water flow display to two decimal places.
+Version 0.3.6 adds optional pool support: pool temperature, heating-water temperature and setpoint, a pool-heating enable switch, and an active-heating status sensor. Pool entities are exposed only when `BazDef` is false and the corresponding objects are advertised by the controller. It also corrects the pool-heating enable object to `bazenmainon` and shortens the Czech temperature-setting labels.
 
 The integration discovers capabilities from `/tecoapi/getlist` on every Home Assistant integration load/reload. Only entities actually exposed by the connected controller are created. This allows one integration version to support different NeoRé controller/software generations.
 
@@ -25,6 +25,7 @@ All entities remain grouped below exactly one Home Assistant device: **NeoRé te
 - `InTtopv` – flow water temperature
 - `InTtuv` – DHW temperature
 - `InTobj` – raw room/object input temperature
+- `InTbaz` – pool temperature (optional; available only when pool support is enabled)
 - `ActFlow` – heating water flow, m³/h
 - `ActHeaPow` – heating power, kW
 - `HeatSumCnt` – delivered heat energy, kWh, long-term statistics enabled
@@ -39,6 +40,8 @@ Read-only temperature sensors are created only when their value at integration l
 - `tobjekreq` – room setpoint, 10…30 °C; created only when `tobj <= 100`
 - `korekce` – water correction, ±9 °C in heating and ±3 °C in cooling
 - `tempcoolw` – cooling-water setpoint, 15…20 °C
+- `tbazenwat` – pool heating-water temperature, 10…40 °C (optional)
+- `tbazenreq` – pool temperature setpoint, 10…40 °C (optional)
 - `NeoEkvValue.TempEkvA` – curve point for −20 °C, 20…60 °C
 - `NeoEkvValue.TempEkvB` – curve point for −7 °C, 20…60 °C
 - `NeoEkvValue.TempEkvC` – curve point for +6 °C, 20…60 °C
@@ -49,15 +52,19 @@ Only the four writable `TempEkvA…D` fields are exposed from `NeoEkvValue`.
 ### Controls
 - `chodhlavni` – switch: enable heating/cooling operation
 - `tuvmainon` – switch: enable DHW heating
+- `bazenmainon` – switch: enable pool heating (optional)
 - `heating_int` – select: Heating / Cooling (`1 = heating`)
 
 ### Errors / diagnostics
 - `errorblock` – binary problem sensor; ON means a serious error blocks operation
 - `sazba` – diagnostic binary sensor, **disabled by default**; ON means tariff-controlled processes are permitted, OFF means they are blocked
+- `bazenon` – binary heat sensor: pool heating is active (optional)
 
 ## Discovery behavior
 
 `getlist` is queried only when the integration is loaded/reloaded, not every 15-second polling cycle. Therefore, after a NeoRé software update that adds/removes NeoApi objects, reload the integration or restart Home Assistant.
+
+Pool entities are created only when `BazDef` is false. Each pool entity must also be present in `getlist`; controllers without pool support therefore do not receive empty or unavailable pool controls.
 
 ## Install / upgrade
 
