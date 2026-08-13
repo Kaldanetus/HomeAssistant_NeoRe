@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
-from homeassistant.components.binary_sensor import BinarySensorDeviceClass, BinarySensorEntity
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import NeoReConfigEntry
-from .const import OBJECT_ERROR_BLOCK, OBJECT_TARIFF_PERMISSION
-from .entity import NeoReEntity
+from .const import OBJECT_ERROR_BLOCK, OBJECT_POOL_HEATING, OBJECT_TARIFF_PERMISSION
+from .entity import NeoReEntity, pool_is_exposed
 
 
 async def async_setup_entry(
@@ -24,6 +27,8 @@ async def async_setup_entry(
         entities.append(NeoReErrorBlockBinarySensor(entry, coordinator))
     if coordinator.has_object(OBJECT_TARIFF_PERMISSION):
         entities.append(NeoReTariffPermissionBinarySensor(entry, coordinator))
+    if coordinator.has_object(OBJECT_POOL_HEATING) and pool_is_exposed(coordinator):
+        entities.append(NeoRePoolHeatingBinarySensor(entry, coordinator))
     async_add_entities(entities)
 
 
@@ -57,4 +62,20 @@ class NeoReTariffPermissionBinarySensor(NeoReEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         value = self.coordinator.data.get(OBJECT_TARIFF_PERMISSION)
+        return value if isinstance(value, bool) else None
+
+
+class NeoRePoolHeatingBinarySensor(NeoReEntity, BinarySensorEntity):
+    """Whether the heat pump is currently heating the pool."""
+
+    _attr_translation_key = "pool_heating"
+    _attr_device_class = BinarySensorDeviceClass.HEAT
+
+    def __init__(self, entry, coordinator) -> None:
+        super().__init__(entry, coordinator)
+        self._attr_unique_id = f"{entry.entry_id}_{OBJECT_POOL_HEATING}"
+
+    @property
+    def is_on(self) -> bool | None:
+        value = self.coordinator.data.get(OBJECT_POOL_HEATING)
         return value if isinstance(value, bool) else None
