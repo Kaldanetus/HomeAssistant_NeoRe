@@ -67,7 +67,7 @@ DATA_PROGRAM_STAMP = "_program_stamp"
 DATA_PLC_FAMILY = "_plc_family"
 DATA_PLC_TYPE = "_plc_type"
 DATA_PLC_SPECIFICATION = "_plc_specification"
-DATA_HW_VERSION = "_hw_version"
+DATA_FW_VERSION = "_firmware_version"
 DATA_SERIAL_NUMBER = "_serial_number"
 
 BOOLEAN_OBJECTS: frozenset[str] = frozenset(
