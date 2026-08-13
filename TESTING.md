@@ -1,4 +1,4 @@
-# Testovací postup v0.3.5
+# Testovací postup v0.3.7
 
 ## 1. Ověření discovery
 
@@ -16,6 +16,9 @@ curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?NeoE
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?heating_int"
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?OuPWM1"
 curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?pow1st"
+curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?BazDef"
+curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?InTbaz"
+curl --digest -u foxtrot:foxtrotAP1 "http://IP_REGULATORU/tecoapi/getobject?bazenon"
 ```
 
 ## 3. Bezpečný test zápisu
@@ -46,6 +49,11 @@ Očekávání:
 - `pow1st` se zobrazuje jako požadovaný výkon TČ,
 - `ActFlow` se ve výchozím stavu zobrazuje na dvě desetinná místa,
 - `korekce` se zobrazuje jako posuvník s názvem „Korekce“,
+- pokud je `BazDef` nepravdivé, zobrazí se dostupné bazénové prvky
+  `InTbaz`, `mazenmainon`, `tbazenwat`, `tbazenreq` a `bazenon`,
+- ovládací prvek „Povolení ohřevu bazénu“ se zobrazí i na verzích firmwaru,
+  které vynechávají zapisovatelný objekt `mazenmainon` z odpovědi `getlist`,
+- pokud je `BazDef` pravdivé, nezobrazí se žádný bazénový prvek,
 - při odpojení PLC se zařízení/entity stanou nedostupné,
 - dočasná chyba jedné proměnné neshodí ostatní entity.
 

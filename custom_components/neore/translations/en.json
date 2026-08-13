@@ -43,6 +43,9 @@
       "room_input_temperature": {
         "name": "Room temperature input"
       },
+      "pool_temperature": {
+        "name": "Pool temperature"
+      },
       "flow_rate": {
         "name": "Heating water flow rate"
       },
@@ -76,6 +79,13 @@
           "on": "Permitted",
           "off": "Blocked"
         }
+      },
+      "pool_heating": {
+        "name": "Pool heating",
+        "state": {
+          "on": "Heating",
+          "off": "Idle"
+        }
       }
     },
     "switch": {
@@ -84,6 +94,9 @@
       },
       "dhw_enable": {
         "name": "DHW heating enabled"
+      },
+      "pool_enable": {
+        "name": "Pool heating enabled"
       }
     },
     "select": {
@@ -107,6 +120,12 @@
       },
       "cooling_water_setpoint": {
         "name": "Cooling water setpoint"
+      },
+      "pool_water_temperature": {
+        "name": "Pool heating water temperature"
+      },
+      "pool_setpoint": {
+        "name": "Pool setpoint"
       },
       "heating_curve_a": {
         "name": "Heating curve at -20 °C"

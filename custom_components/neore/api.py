@@ -21,7 +21,9 @@ from .const import (
     HEATING_CURVE_FIELDS,
     OBJECT_HEATING_CURVE,
     OBJECT_NEORE_INFO,
+    OBJECT_POOL_ENABLE,
     OBJECT_SIMPLY_NEO_VERSION,
+    POOL_OBJECTS,
     POLL_OBJECTS,
 )
 
@@ -200,9 +202,20 @@ class NeoApiClient:
         data: dict[str, Any] = {}
         attempted = 0
         successful = 0
+        pool_is_advertised = any(
+            _find_name(available_objects, object_name) is not None
+            for object_name in POOL_OBJECTS
+        )
 
         for canonical_name in POLL_OBJECTS:
             actual_name = _find_name(available_objects, canonical_name)
+            if (
+                actual_name is None
+                and canonical_name == OBJECT_POOL_ENABLE
+                and pool_is_advertised
+            ):
+                # Some firmware supports this object but omits it from getlist.
+                actual_name = canonical_name
             if actual_name is None:
                 continue
 

@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorStateClass,
+)
 from homeassistant.const import (
     PERCENTAGE,
     UnitOfEnergy,
@@ -28,11 +32,12 @@ from .const import (
     OBJECT_CIRCULATION_PUMP_REQUESTED_POWER,
     OBJECT_HEAT_PUMP_REQUESTED_POWER,
     OBJECT_OUTDOOR_TEMPERATURE,
+    OBJECT_POOL_TEMPERATURE,
     OBJECT_RETURN_TEMPERATURE,
     OBJECT_ROOM_INPUT_TEMPERATURE,
     OBJECT_ROOM_TEMPERATURE,
 )
-from .entity import NeoReEntity, float_or_none
+from .entity import NeoReEntity, float_or_none, pool_is_exposed
 
 
 @dataclass(frozen=True)
@@ -80,6 +85,12 @@ SENSOR_DEFINITIONS: tuple[NeoReSensorDefinition, ...] = (
     NeoReSensorDefinition(
         OBJECT_ROOM_INPUT_TEMPERATURE,
         "room_input_temperature",
+        SensorDeviceClass.TEMPERATURE,
+        unit=UnitOfTemperature.CELSIUS,
+    ),
+    NeoReSensorDefinition(
+        OBJECT_POOL_TEMPERATURE,
+        "pool_temperature",
         SensorDeviceClass.TEMPERATURE,
         unit=UnitOfTemperature.CELSIUS,
     ),
@@ -141,11 +152,13 @@ async def async_setup_entry(
     for definition in SENSOR_DEFINITIONS:
         if not coordinator.has_object(definition.object_name):
             continue
+        if definition.object_name == OBJECT_POOL_TEMPERATURE and not pool_is_exposed(
+            coordinator
+        ):
+            continue
 
         unique_id = f"{entry.entry_id}_{definition.object_name}"
-        registered_entity_id = registry.async_get_entity_id(
-            "sensor", DOMAIN, unique_id
-        )
+        registered_entity_id = registry.async_get_entity_id("sensor", DOMAIN, unique_id)
         registered_entry = (
             registry.async_get(registered_entity_id) if registered_entity_id else None
         )
@@ -158,10 +171,7 @@ async def async_setup_entry(
                 # NeoRé uses values above 100 °C as a sentinel for an unused or
                 # disconnected temperature input. Hide an entry left over from
                 # an older integration version and do not add it to Home Assistant.
-                if (
-                    registered_entry is not None
-                    and registered_entry.hidden_by is None
-                ):
+                if registered_entry is not None and registered_entry.hidden_by is None:
                     registry.async_update_entity(
                         registered_entry.entity_id,
                         hidden_by=er.RegistryEntryHider.INTEGRATION,

@@ -17,11 +17,13 @@ from .const import (
     OBJECT_DHW_SETPOINT,
     OBJECT_HEATING_CURVE,
     OBJECT_HEATING_MODE,
+    OBJECT_POOL_SETPOINT,
+    OBJECT_POOL_WATER_TEMPERATURE,
     OBJECT_ROOM_SETPOINT,
     OBJECT_ROOM_TEMPERATURE,
     OBJECT_WATER_CORRECTION,
 )
-from .entity import NeoReEntity, float_or_none
+from .entity import NeoReEntity, float_or_none, pool_is_exposed
 
 
 @dataclass(frozen=True)
@@ -50,6 +52,10 @@ NUMBER_DEFINITIONS: tuple[NeoReNumberDefinition, ...] = (
     NeoReNumberDefinition(
         OBJECT_COOLING_WATER_SETPOINT, "cooling_water_setpoint", 15.0, 20.0
     ),
+    NeoReNumberDefinition(
+        OBJECT_POOL_WATER_TEMPERATURE, "pool_water_temperature", 10.0, 40.0
+    ),
+    NeoReNumberDefinition(OBJECT_POOL_SETPOINT, "pool_setpoint", 10.0, 40.0),
     NeoReNumberDefinition(
         f"{OBJECT_HEATING_CURVE}.{HEATING_CURVE_FIELDS[0]}",
         "heating_curve_a",
@@ -99,8 +105,16 @@ async def async_setup_entry(
     for definition in NUMBER_DEFINITIONS:
         if not coordinator.has_object(definition.object_name):
             continue
+        if definition.object_name in (
+            OBJECT_POOL_WATER_TEMPERATURE,
+            OBJECT_POOL_SETPOINT,
+        ) and not pool_is_exposed(coordinator):
+            continue
         # Requirement from NeoRé: tobjefreq is displayed only when tobj <= 100.
-        if definition.object_name == OBJECT_ROOM_SETPOINT and not _room_setpoint_should_be_exposed(entry):
+        if (
+            definition.object_name == OBJECT_ROOM_SETPOINT
+            and not _room_setpoint_should_be_exposed(entry)
+        ):
             continue
         entities.append(NeoReTemperatureNumber(entry, coordinator, definition))
 
