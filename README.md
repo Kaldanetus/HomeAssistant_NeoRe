@@ -6,7 +6,7 @@ Version **0.3.9**.
 
 ## What changed in 0.3.9
 
-The GitHub integration version is shown in the Home Assistant device system information again. The control-program and PLC versions remain available as separate diagnostic sensors so that the individual version values are not confused.
+Version 0.3.9 remains visible as `Version: 0.3.9` in the detailed device information. In the **Device – information** card, `PLCPrgInfo.progVersion` is shown as **Software**. The unchanged `PLCInfo.version` value, formerly labelled **Hardware**, is shown as **Firmware**.
 
 ## What changed in 0.3.7
 

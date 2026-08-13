@@ -6,7 +6,7 @@ Verze **0.3.9**.
 
 ## Co se změnilo ve verzi 0.3.9
 
-Verze integrace z GitHubu se znovu zobrazuje v systémových informacích zařízení Home Assistantu. Verze řídicího programu a PLC zůstávají dostupné jako samostatné diagnostické senzory, aby se jednotlivé údaje nezaměňovaly.
+Verze integrace z GitHubu se nadále zobrazuje v detailních informacích zařízení jako `Verze: 0.3.9`. Na kartě **Zařízení – informace** se verze `PLCPrgInfo.progVersion` zobrazuje pod názvem **Software**. Hodnota `PLCInfo.version`, dříve uvedená jako **Hardware**, zůstává beze změny a zobrazuje se pod názvem **Firmware**.
 
 ## Co se změnilo ve verzi 0.3.7
 

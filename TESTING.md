@@ -44,9 +44,11 @@ Po restartu otevřete **Nastavení → Zařízení a služby → NeoRé → Zař
 
 Očekávání:
 - existuje jedno zařízení NeoRé,
-- systémové informace zařízení zobrazují verzi integrace `0.3.9`,
-- systémové informace zařízení obsahují typ a sériové číslo PLC, verzi programu
-  z `PLCPrgInfo` a verzi PLC z `PLCInfo`, pokud regulátor tyto struktury nabízí,
+- detailní informace zařízení nadále zobrazují `Verze: 0.3.9`,
+- karta **Zařízení – informace** zobrazuje `PLCPrgInfo.progVersion` jako
+  **Software** a nezměněnou hodnotu `PLCInfo.version` jako **Firmware**, pokud
+  regulátor tyto struktury nabízí,
+- systémové informace zařízení obsahují typ a sériové číslo PLC,
 - zobrazí se jen proměnné přítomné v `getlist`,
 - `sazba` je v diagnostice a ve výchozím stavu zakázaná,
 - žádný čtecí teplotní senzor se nevytvoří, pokud je při načtení integrace jeho hodnota `> 100 °C`,
