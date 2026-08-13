@@ -18,10 +18,13 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import NeoReConfigEntry
 from .const import (
+    DATA_FW_VERSION,
+    DATA_SW_VERSION,
     DOMAIN,
     OBJECT_DHW_TEMPERATURE,
     OBJECT_ERROR_CODE,
@@ -49,6 +52,14 @@ class NeoReSensorDefinition:
     device_class: SensorDeviceClass | None = None
     state_class: SensorStateClass | None = SensorStateClass.MEASUREMENT
     unit: str | None = None
+
+
+@dataclass(frozen=True)
+class NeoReMetadataSensorDefinition:
+    """Definition of a version shown in the device diagnostics."""
+
+    metadata_key: str
+    translation_key: str
 
 
 SENSOR_DEFINITIONS: tuple[NeoReSensorDefinition, ...] = (
@@ -132,6 +143,11 @@ SENSOR_DEFINITIONS: tuple[NeoReSensorDefinition, ...] = (
     ),
 )
 
+METADATA_SENSOR_DEFINITIONS: tuple[NeoReMetadataSensorDefinition, ...] = (
+    NeoReMetadataSensorDefinition(DATA_SW_VERSION, "software_version"),
+    NeoReMetadataSensorDefinition(DATA_FW_VERSION, "firmware_version"),
+)
+
 
 def _temperature_is_exposable(value) -> bool:
     """Return False only for NeoRé's sentinel temperature values above 100 °C."""
@@ -146,7 +162,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up only valid sensors advertised by this controller's getlist."""
     coordinator = entry.runtime_data
-    entities: list[NeoReSensor] = []
+    entities: list[NeoReSensor | NeoReMetadataSensor] = []
     registry = er.async_get(hass)
 
     for definition in SENSOR_DEFINITIONS:
@@ -188,6 +204,12 @@ async def async_setup_entry(
                 registry.async_update_entity(registered_entry.entity_id, hidden_by=None)
 
         entities.append(NeoReSensor(entry, coordinator, definition))
+
+    entities.extend(
+        NeoReMetadataSensor(entry, coordinator, definition)
+        for definition in METADATA_SENSOR_DEFINITIONS
+        if coordinator.metadata.get(definition.metadata_key) is not None
+    )
 
     async_add_entities(entities)
 
@@ -232,3 +254,22 @@ class NeoReSensor(NeoReEntity, SensorEntity):
         return _temperature_is_exposable(
             self.coordinator.data.get(self._definition.object_name)
         )
+
+
+class NeoReMetadataSensor(NeoReEntity, SensorEntity):
+    """A static software or firmware version diagnostic."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(
+        self, entry, coordinator, definition: NeoReMetadataSensorDefinition
+    ) -> None:
+        super().__init__(entry, coordinator)
+        self._definition = definition
+        self._attr_unique_id = f"{entry.entry_id}_{definition.metadata_key.lstrip('_')}"
+        self._attr_translation_key = definition.translation_key
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the version read during integration setup."""
+        return self.coordinator.metadata.get(self._definition.metadata_key)

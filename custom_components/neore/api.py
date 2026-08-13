@@ -17,7 +17,7 @@ from urllib.request import (
 from .const import (
     BOOLEAN_OBJECTS,
     DATA_API_VERSION,
-    DATA_HW_VERSION,
+    DATA_FW_VERSION,
     DATA_MODEL,
     DATA_PLC_FAMILY,
     DATA_PLC_SPECIFICATION,
@@ -303,7 +303,7 @@ class NeoApiClient:
                     "family": DATA_PLC_FAMILY,
                     "plctype": DATA_PLC_TYPE,
                     "specif": DATA_PLC_SPECIFICATION,
-                    "version": DATA_HW_VERSION,
+                    "version": DATA_FW_VERSION,
                     "serialnum": DATA_SERIAL_NUMBER,
                 }
                 for key, value in plc_info.items():

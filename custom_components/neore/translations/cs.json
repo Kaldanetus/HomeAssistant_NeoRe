@@ -63,6 +63,12 @@
       },
       "error_code": {
         "name": "Kód chyby nebo stavu"
+      },
+      "software_version": {
+        "name": "Software"
+      },
+      "firmware_version": {
+        "name": "Firmware"
       }
     },
     "binary_sensor": {
