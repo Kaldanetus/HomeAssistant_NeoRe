@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Callable
 
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -12,8 +12,11 @@ from .const import (
     CONF_BASE_URL,
     DOMAIN,
     OBJECT_DHW_DEFINITION,
+    OBJECT_DHW_TEMPERATURE,
     OBJECT_POOL_DEFINITION,
+    OBJECT_POOL_TEMPERATURE,
     OBJECT_ROOM_DEFINITION,
+    OBJECT_ROOM_TEMPERATURE,
 )
 from .coordinator import NeoReCoordinator
 
@@ -53,6 +56,16 @@ def float_or_none(value: Any) -> float | None:
         return None
 
 
+def temperature_is_exposable(value: Any) -> bool:
+    """Return False only for NeoRé's sentinel temperature values above 100 °C.
+
+    Shared by the sensor and number platforms so a temperature reading and
+    any writable set-point tied to it agree on what counts as a real value.
+    """
+    numeric = float_or_none(value)
+    return numeric is None or numeric <= 100.0
+
+
 def _sensor_is_wired(coordinator: NeoReCoordinator, definition_object_name: str) -> bool:
     """Return whether a NeoApi "*Def" flag confirms its physical sensor is wired.
 
@@ -71,13 +84,13 @@ def pool_is_exposed(coordinator: NeoReCoordinator) -> bool:
     return _sensor_is_wired(coordinator, OBJECT_POOL_DEFINITION)
 
 
-def room_input_is_exposed(coordinator: NeoReCoordinator) -> bool:
-    """Return whether the raw (uncorrected) room input sensor is really wired.
+def room_temperature_is_exposed(coordinator: NeoReCoordinator) -> bool:
+    """Return whether the room/object temperature sensor (`tobj`) is really wired.
 
-    Some controller SW advertises `InTobj` in getlist and keeps answering
-    `getobject` for it even without a physical sensor attached, mirroring
-    `tobj` instead. `ObjDef` is the documented signal for that case, so only
-    it - not getlist presence - decides whether `InTobj` is exposed.
+    `tobj` is the only object used to display the room/object temperature;
+    `InTobj` (the raw, uncorrected input) is never used, even when a
+    controller advertises it in getlist. `ObjDef` is the documented signal
+    for a missing physical sensor.
     """
     return _sensor_is_wired(coordinator, OBJECT_ROOM_DEFINITION)
 
@@ -85,3 +98,14 @@ def room_input_is_exposed(coordinator: NeoReCoordinator) -> bool:
 def dhw_is_exposed(coordinator: NeoReCoordinator) -> bool:
     """Return whether the DHW temperature sensor (`InTtuv`) is really wired."""
     return _sensor_is_wired(coordinator, OBJECT_DHW_DEFINITION)
+
+
+# Read-only temperature objects whose physical sensor presence is confirmed
+# by a documented NeoApi "*Def" flag rather than by getlist alone. Shared by
+# the sensor platform (entity creation) and by any writable number tied to
+# the same input (e.g. the room setpoint).
+DEF_GATED_TEMPERATURE_OBJECTS: dict[str, Callable[[NeoReCoordinator], bool]] = {
+    OBJECT_ROOM_TEMPERATURE: room_temperature_is_exposed,
+    OBJECT_DHW_TEMPERATURE: dhw_is_exposed,
+    OBJECT_POOL_TEMPERATURE: pool_is_exposed,
+}

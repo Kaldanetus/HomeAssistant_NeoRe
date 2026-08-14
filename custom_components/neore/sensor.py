@@ -37,15 +37,13 @@ from .const import (
     OBJECT_OUTDOOR_TEMPERATURE,
     OBJECT_POOL_TEMPERATURE,
     OBJECT_RETURN_TEMPERATURE,
-    OBJECT_ROOM_INPUT_TEMPERATURE,
     OBJECT_ROOM_TEMPERATURE,
 )
 from .entity import (
+    DEF_GATED_TEMPERATURE_OBJECTS,
     NeoReEntity,
-    dhw_is_exposed,
     float_or_none,
-    pool_is_exposed,
-    room_input_is_exposed,
+    temperature_is_exposable,
 )
 
 
@@ -96,12 +94,6 @@ SENSOR_DEFINITIONS: tuple[NeoReSensorDefinition, ...] = (
     NeoReSensorDefinition(
         OBJECT_DHW_TEMPERATURE,
         "dhw_temperature",
-        SensorDeviceClass.TEMPERATURE,
-        unit=UnitOfTemperature.CELSIUS,
-    ),
-    NeoReSensorDefinition(
-        OBJECT_ROOM_INPUT_TEMPERATURE,
-        "room_input_temperature",
         SensorDeviceClass.TEMPERATURE,
         unit=UnitOfTemperature.CELSIUS,
     ),
@@ -157,12 +149,6 @@ METADATA_SENSOR_DEFINITIONS: tuple[NeoReMetadataSensorDefinition, ...] = (
 )
 
 
-def _temperature_is_exposable(value) -> bool:
-    """Return False only for NeoRé's sentinel temperature values above 100 °C."""
-    numeric = float_or_none(value)
-    return numeric is None or numeric <= 100.0
-
-
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: NeoReConfigEntry,
@@ -176,21 +162,12 @@ async def async_setup_entry(
     for definition in SENSOR_DEFINITIONS:
         if not coordinator.has_object(definition.object_name):
             continue
-        if definition.object_name == OBJECT_POOL_TEMPERATURE and not pool_is_exposed(
-            coordinator
-        ):
-            continue
-        if (
-            definition.object_name == OBJECT_ROOM_INPUT_TEMPERATURE
-            and not room_input_is_exposed(coordinator)
-        ):
-            # ObjDef reports the room sensor as not connected: getlist may
-            # still advertise InTobj on this controller SW, but the reading
-            # behind it does not really exist (see manual-neo-api).
-            continue
-        if definition.object_name == OBJECT_DHW_TEMPERATURE and not dhw_is_exposed(
-            coordinator
-        ):
+        exposure_check = DEF_GATED_TEMPERATURE_OBJECTS.get(definition.object_name)
+        if exposure_check is not None and not exposure_check(coordinator):
+            # The matching *Def flag (ObjDef/TuvDef/BazDef, per manual-neo-api)
+            # reports this input's physical sensor as not connected. getlist
+            # may still advertise the name on this controller SW, but the
+            # reading behind it does not really exist.
             continue
 
         unique_id = f"{entry.entry_id}_{definition.object_name}"
@@ -200,7 +177,7 @@ async def async_setup_entry(
         )
 
         if definition.device_class == SensorDeviceClass.TEMPERATURE:
-            valid_temperature = _temperature_is_exposable(
+            valid_temperature = temperature_is_exposable(
                 coordinator.data.get(definition.object_name)
             )
             if not valid_temperature:
@@ -266,14 +243,17 @@ class NeoReSensor(NeoReEntity, SensorEntity):
 
     @property
     def available(self) -> bool:
-        """Mark a temperature entity unavailable if it later exceeds 100 °C."""
+        """Mark unavailable once >100 °C or a matching *Def flag reports missing."""
         if not super().available:
             return False
         if self._definition.device_class != SensorDeviceClass.TEMPERATURE:
             return True
-        return _temperature_is_exposable(
+        if not temperature_is_exposable(
             self.coordinator.data.get(self._definition.object_name)
-        )
+        ):
+            return False
+        exposure_check = DEF_GATED_TEMPERATURE_OBJECTS.get(self._definition.object_name)
+        return exposure_check is None or exposure_check(self.coordinator)
 
 
 class NeoReMetadataSensor(NeoReEntity, SensorEntity):

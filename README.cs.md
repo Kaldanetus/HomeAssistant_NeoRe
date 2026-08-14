@@ -6,7 +6,11 @@ Verze **0.4.4**.
 
 ## Co se změnilo ve verzi 0.4.4
 
-Opravena nekonzistence zobrazení mezi regulátory s různou verzí SW NeoApi: některé regulátory inzerují `InTobj` (nezpracovanou vstupní pokojovou teplotu) v `getlist` a na `getobject` pro ni dál odpovídají, i když není připojené žádné pokojové čidlo — místo skutečné hodnoty jen opakují `tobj`. `InTobj` (a ze stejného důvodu i `InTtuv`) se nyní vytvoří pouze tehdy, pokud odpovídající zdokumentovaný příznak „nepřipojeno“ (`ObjDef`/`TuvDef`) nehlásí `True`; regulátor se SW natolik starým, že tento příznak vůbec neinzeruje, se i nadále považuje za připojený — v souladu s poznámkou v manuálu API, že chybějící název v `getlist` znamená jen „zatím nepodporováno touto verzí SW“, nikoli „nepřipojeno“. Pole **Firmware** na kartě informací o zařízení nyní zobrazuje `NA`, pokud regulátor neposkytuje `PLCPrgInfo.progVersion`, místo aby potichu dosadilo verzi samotné integrace (což není firmware zařízení a zobrazovalo to zavádějící údaj). Pole informací o zařízení sestavovaná v `__init__.py` a ve vlastnosti `device_info` každé entity nyní sestavuje jediná sdílená metoda `NeoReCoordinator.device_info_kwargs()`, takže se tyto dva zdroje karty už nemohou rozejít.
+Opravena nekonzistence zobrazení mezi regulátory s různou verzí SW NeoApi. `InTobj` (nezpracovaná, nekorigovaná vstupní pokojová teplota) se už vůbec nečte ani nezobrazuje: pro pokojovou teplotu / teplotu objektu se používá výhradně `tobj`, bez ohledu na to, co regulátor inzeruje v `getlist`. Některé SW regulátorů `InTobj` inzerovaly a na `getobject` pro ni dál odpovídaly, i když nebylo připojené žádné pokojové čidlo — místo skutečné hodnoty jen opakovaly `tobj`. Jediná spolehlivá oprava je na `InTobj` nikdy nespoléhat.
+
+Dostupnost senzorů/čísel se nyní všude, kde existuje odpovídající příznak, zjišťuje pomocí zdokumentovaných příznaků NeoApi `*Def` („nepřipojeno“) místo odhadu z hodnoty: `tobj` (teplota objektu) a požadovaná pokojová teplota `tobjekreq` nyní navíc vyžadují, aby `ObjDef` nehlásilo `True`, `InTtuv` (teplota TUV) vyžaduje `TuvDef` a bazénové entity nadále používají `BazDef`. Regulátor se SW natolik starým, že příznak vůbec neinzeruje, se i nadále považuje za připojený — v souladu s poznámkou v manuálu API, že chybějící název v `getlist` znamená jen „zatím nepodporováno touto verzí SW“, nikoli „nepřipojeno“. Původní kontrola „hodnota nad 100 °C je sentinel“ platí beze změny všude tam, kde platila dříve, nyní je ale sdílená jedinou funkcí `temperature_is_exposable()` místo duplicity mezi platformami senzorů a čísel.
+
+Pole **Firmware** na kartě informací o zařízení nyní zobrazuje `NA`, pokud regulátor neposkytuje `PLCPrgInfo.progVersion`, místo aby potichu dosadilo verzi samotné integrace (což není firmware zařízení a zobrazovalo to zavádějící údaj). Pole informací o zařízení sestavovaná v `__init__.py` a ve vlastnosti `device_info` každé entity nyní sestavuje jediná sdílená metoda `NeoReCoordinator.device_info_kwargs()`, takže se tyto dva zdroje karty už nemohou rozejít.
 
 ## Co se změnilo ve verzi 0.4.3
 
@@ -46,10 +50,9 @@ Všechny entity zůstávají seskupené právě pod jedním zařízením Home As
 
 - `tvenek` – venkovní teplota
 - `tvrat` – teplota vratné vody (volitelná; vytvoří se pouze tehdy, pokud ji regulátor inzeruje)
-- `tobj` – pokojová teplota / teplota objektu
+- `tobj` – pokojová teplota / teplota objektu; vytvoří se pouze, pokud `ObjDef` nehlásí `True`; jde o jediný objekt použitý pro pokojovou teplotu / teplotu objektu — `InTobj` (nezpracovaný, nekorigovaný vstup) se nikdy nečte ani nezobrazuje
 - `InTtopv` – teplota topné vody
 - `InTtuv` – teplota teplé užitkové vody (TUV); vytvoří se pouze, pokud `TuvDef` nehlásí `True`
-- `InTobj` – nezpracovaná vstupní pokojová teplota / teplota objektu; vytvoří se pouze, pokud `ObjDef` nehlásí `True`
 - `InTbaz` – teplota bazénu (volitelná; pouze při povolené podpoře bazénu)
 - `ActFlow` – průtok topné vody, m³/h
 - `ActHeaPow` – topný výkon, kW
@@ -63,7 +66,7 @@ Senzory teploty určené pouze ke čtení se vytvoří jen tehdy, pokud je jejic
 ### Zapisovatelná nastavení teploty
 
 - `ttuvreqmain` – požadovaná teplota TUV, 30…60 °C
-- `tobjekreq` – požadovaná pokojová teplota, 10…30 °C; vytvoří se pouze při `tobj <= 100`
+- `tobjekreq` – požadovaná pokojová teplota, 10…30 °C; vytvoří se pouze, pokud je `tobj` reálná připojená hodnota (`tobj <= 100` a `ObjDef` nehlásí `True`)
 - `korekce` – korekce teploty vody, ±9 °C při vytápění a ±3 °C při chlazení
 - `tempcoolw` – požadovaná teplota chladicí vody, 15…20 °C
 - `tbazenwat` – teplota vody pro ohřev bazénu, 10…40 °C (volitelná)
@@ -94,7 +97,7 @@ Dotaz `getlist` se provádí pouze při načtení nebo opětovném načtení int
 
 Bazénové entity se vytvoří pouze tehdy, když je `BazDef` nepravdivé. Každá bazénová entita musí být současně přítomná v `getlist`, takže regulátory bez podpory bazénu nedostanou prázdné ani nedostupné bazénové ovládací prvky.
 
-Stejný princip platí přes `ObjDef`/`TuvDef` i pro `InTobj` a `InTtuv`: přítomnost názvu v `getlist` sama o sobě nestačí, protože některý SW regulátoru dál odpovídá na `getobject` i pro čidlo, které fyzicky připojené není. Regulátor se SW natolik starým, že příznak vůbec neinzeruje, se považuje za připojený — dle poznámky v manuálu API, že chybějící položka v `getlist` znamená „přidáno v novější verzi SW“, nikoli „nepřipojeno“.
+Stejný princip platí přes `ObjDef`/`TuvDef` i pro `tobj` (a na něj navázanou požadovanou pokojovou teplotu `tobjekreq`) a pro `InTtuv`: přítomnost názvu v `getlist` sama o sobě nestačí, protože některý SW regulátoru dál odpovídá na `getobject` i pro čidlo, které fyzicky připojené není. Regulátor se SW natolik starým, že příznak vůbec neinzeruje, se považuje za připojený — dle poznámky v manuálu API, že chybějící položka v `getlist` znamená „přidáno v novější verzi SW“, nikoli „nepřipojeno“. `InTobj` se přitom nepoužívá vůbec — pro pokojovou teplotu / teplotu objektu se čte výhradně `tobj`.
 
 Pole **Firmware** na kartě informací o zařízení zobrazuje `NA`, pokud regulátor neposkytuje `PLCPrgInfo.progVersion` (starší SW). Nikdy se přitom nedosazuje verze samotné integrace, která není firmwarem zařízení.
 

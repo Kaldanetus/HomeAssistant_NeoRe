@@ -20,8 +20,11 @@ OBJECT_RETURN_TEMPERATURE = "tvrat"
 OBJECT_ROOM_TEMPERATURE = "tobj"
 OBJECT_FLOW_TEMPERATURE = "InTtopv"
 OBJECT_DHW_TEMPERATURE = "InTtuv"
-OBJECT_ROOM_INPUT_TEMPERATURE = "InTobj"
 OBJECT_POOL_TEMPERATURE = "InTbaz"
+# NeoApi also exposes InTobj (the room temperature straight from the input,
+# without correction) on some controller SW, but it is intentionally never
+# used: only `tobj` (OBJECT_ROOM_TEMPERATURE, with correction) is displayed
+# for the room/object temperature.
 
 # Writable temperatures / set-points.
 OBJECT_DHW_SETPOINT = "ttuvreqmain"
@@ -56,14 +59,14 @@ OBJECT_POOL_DEFINITION = "BazDef"
 OBJECT_POOL_ENABLE = "bazenmainon"
 OBJECT_POOL_HEATING = "bazenon"
 
-# "Sensor not connected" flags for readings whose *name* can be advertised in
-# getlist while the physical input behind it is not actually wired. A
+# "Sensor not connected" flags used to detect whether the physical input
+# behind a reading is really wired, rather than relying on getlist alone. A
 # controller whose SW predates a flag simply omits it from getlist, and the
 # manual documents that as "not yet available in this SW", not "disconnected"
 # (see manual-neo-api_14082026.pdf) - so a missing flag must NOT hide the
 # reading, only an explicit True does.
-OBJECT_ROOM_DEFINITION = "ObjDef"
-OBJECT_DHW_DEFINITION = "TuvDef"
+OBJECT_ROOM_DEFINITION = "ObjDef"  # gates OBJECT_ROOM_TEMPERATURE (tobj)
+OBJECT_DHW_DEFINITION = "TuvDef"  # gates OBJECT_DHW_TEMPERATURE (InTtuv)
 
 # Optional metadata published by NeoApi v2.
 OBJECT_NEORE_INFO = "IniNeoRe"
@@ -106,7 +109,6 @@ POLL_OBJECTS: tuple[str, ...] = (
     OBJECT_ROOM_TEMPERATURE,
     OBJECT_FLOW_TEMPERATURE,
     OBJECT_DHW_TEMPERATURE,
-    OBJECT_ROOM_INPUT_TEMPERATURE,
     OBJECT_POOL_TEMPERATURE,
     OBJECT_DHW_SETPOINT,
     OBJECT_ROOM_SETPOINT,

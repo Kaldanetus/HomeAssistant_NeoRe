@@ -23,7 +23,13 @@ from .const import (
     OBJECT_ROOM_TEMPERATURE,
     OBJECT_WATER_CORRECTION,
 )
-from .entity import NeoReEntity, float_or_none, pool_is_exposed
+from .entity import (
+    NeoReEntity,
+    float_or_none,
+    pool_is_exposed,
+    room_temperature_is_exposed,
+    temperature_is_exposable,
+)
 
 
 @dataclass(frozen=True)
@@ -88,9 +94,11 @@ NUMBER_DEFINITIONS: tuple[NeoReNumberDefinition, ...] = (
 
 
 def _room_setpoint_should_be_exposed(entry: NeoReConfigEntry) -> bool:
-    """Expose the room setpoint unless tobj explicitly reports > 100 °C."""
-    value = float_or_none(entry.runtime_data.data.get(OBJECT_ROOM_TEMPERATURE))
-    return value is None or value <= 100.0
+    """Expose the room setpoint only while `tobj` is a real, wired reading."""
+    coordinator = entry.runtime_data
+    if not temperature_is_exposable(coordinator.data.get(OBJECT_ROOM_TEMPERATURE)):
+        return False
+    return room_temperature_is_exposed(coordinator)
 
 
 async def async_setup_entry(
@@ -110,7 +118,8 @@ async def async_setup_entry(
             OBJECT_POOL_SETPOINT,
         ) and not pool_is_exposed(coordinator):
             continue
-        # Requirement from NeoRé: tobjefreq is displayed only when tobj <= 100.
+        # Requirement from NeoRé: tobjekreq is displayed only while tobj is a
+        # real, wired reading (tobj <= 100 and ObjDef does not report missing).
         if (
             definition.object_name == OBJECT_ROOM_SETPOINT
             and not _room_setpoint_should_be_exposed(entry)
@@ -160,15 +169,16 @@ class NeoReTemperatureNumber(NeoReEntity, NumberEntity):
 
     @property
     def available(self) -> bool:
-        """Hide room setpoint as unavailable if tobj later becomes invalid (>100)."""
+        """Hide room setpoint as unavailable once `tobj` is no longer a real reading."""
         if not super().available:
             return False
         if self._definition.object_name != OBJECT_ROOM_SETPOINT:
             return True
-        room_temperature = float_or_none(
+        if not temperature_is_exposable(
             self.coordinator.data.get(OBJECT_ROOM_TEMPERATURE)
-        )
-        return room_temperature is None or room_temperature <= 100.0
+        ):
+            return False
+        return room_temperature_is_exposed(self.coordinator)
 
     async def async_set_native_value(self, value: float) -> None:
         min_value = self.native_min_value
