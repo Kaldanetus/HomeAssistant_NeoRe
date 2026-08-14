@@ -2,7 +2,11 @@
 
 [English](README.md) | **Čeština**
 
-Verze **0.4.3**.
+Verze **0.4.4**.
+
+## Co se změnilo ve verzi 0.4.4
+
+Opravena nekonzistence zobrazení mezi regulátory s různou verzí SW NeoApi: některé regulátory inzerují `InTobj` (nezpracovanou vstupní pokojovou teplotu) v `getlist` a na `getobject` pro ni dál odpovídají, i když není připojené žádné pokojové čidlo — místo skutečné hodnoty jen opakují `tobj`. `InTobj` (a ze stejného důvodu i `InTtuv`) se nyní vytvoří pouze tehdy, pokud odpovídající zdokumentovaný příznak „nepřipojeno“ (`ObjDef`/`TuvDef`) nehlásí `True`; regulátor se SW natolik starým, že tento příznak vůbec neinzeruje, se i nadále považuje za připojený — v souladu s poznámkou v manuálu API, že chybějící název v `getlist` znamená jen „zatím nepodporováno touto verzí SW“, nikoli „nepřipojeno“. Pole **Firmware** na kartě informací o zařízení nyní zobrazuje `NA`, pokud regulátor neposkytuje `PLCPrgInfo.progVersion`, místo aby potichu dosadilo verzi samotné integrace (což není firmware zařízení a zobrazovalo to zavádějící údaj). Pole informací o zařízení sestavovaná v `__init__.py` a ve vlastnosti `device_info` každé entity nyní sestavuje jediná sdílená metoda `NeoReCoordinator.device_info_kwargs()`, takže se tyto dva zdroje karty už nemohou rozejít.
 
 ## Co se změnilo ve verzi 0.4.3
 
@@ -44,8 +48,8 @@ Všechny entity zůstávají seskupené právě pod jedním zařízením Home As
 - `tvrat` – teplota vratné vody (volitelná; vytvoří se pouze tehdy, pokud ji regulátor inzeruje)
 - `tobj` – pokojová teplota / teplota objektu
 - `InTtopv` – teplota topné vody
-- `InTtuv` – teplota teplé užitkové vody (TUV)
-- `InTobj` – nezpracovaná vstupní pokojová teplota / teplota objektu
+- `InTtuv` – teplota teplé užitkové vody (TUV); vytvoří se pouze, pokud `TuvDef` nehlásí `True`
+- `InTobj` – nezpracovaná vstupní pokojová teplota / teplota objektu; vytvoří se pouze, pokud `ObjDef` nehlásí `True`
 - `InTbaz` – teplota bazénu (volitelná; pouze při povolené podpoře bazénu)
 - `ActFlow` – průtok topné vody, m³/h
 - `ActHeaPow` – topný výkon, kW
@@ -89,6 +93,10 @@ Z objektu `NeoEkvValue` jsou zpřístupněna pouze čtyři zapisovatelná pole `
 Dotaz `getlist` se provádí pouze při načtení nebo opětovném načtení integrace, nikoli v každém patnáctisekundovém cyklu aktualizace. Po aktualizaci softwaru NeoRé, která přidá nebo odebere objekty NeoApi, proto integraci znovu načtěte nebo restartujte Home Assistant.
 
 Bazénové entity se vytvoří pouze tehdy, když je `BazDef` nepravdivé. Každá bazénová entita musí být současně přítomná v `getlist`, takže regulátory bez podpory bazénu nedostanou prázdné ani nedostupné bazénové ovládací prvky.
+
+Stejný princip platí přes `ObjDef`/`TuvDef` i pro `InTobj` a `InTtuv`: přítomnost názvu v `getlist` sama o sobě nestačí, protože některý SW regulátoru dál odpovídá na `getobject` i pro čidlo, které fyzicky připojené není. Regulátor se SW natolik starým, že příznak vůbec neinzeruje, se považuje za připojený — dle poznámky v manuálu API, že chybějící položka v `getlist` znamená „přidáno v novější verzi SW“, nikoli „nepřipojeno“.
+
+Pole **Firmware** na kartě informací o zařízení zobrazuje `NA`, pokud regulátor neposkytuje `PLCPrgInfo.progVersion` (starší SW). Nikdy se přitom nedosazuje verze samotné integrace, která není firmwarem zařízení.
 
 ## Instalace / aktualizace
 

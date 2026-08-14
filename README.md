@@ -2,7 +2,11 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.4.3**.
+Version **0.4.4**.
+
+## What changed in 0.4.4
+
+Fixed a display inconsistency between controllers on different NeoApi SW versions: some controllers advertise `InTobj` (raw room input temperature) in `getlist` and keep answering `getobject` for it even though no room sensor is wired, mirroring `tobj` instead of reporting a real reading. `InTobj` (and, for the same reason, `InTtuv`) is now only created when the corresponding documented "not connected" flag (`ObjDef`/`TuvDef`) does not report `True`; a controller SW old enough to not expose the flag at all is still treated as wired, matching the API manual's note that a name missing from `getlist` just means "not yet supported by this SW", not "disconnected". The **Firmware** field on the device information card now shows `NA` when the controller does not expose `PLCPrgInfo.progVersion`, instead of silently substituting the integration's own release number (which is not the device's firmware and misrepresented it). The device-info fields built in `__init__.py` and in every entity's `device_info` property are now assembled by one shared `NeoReCoordinator.device_info_kwargs()` so the two card sources cannot drift apart again.
 
 ## What changed in 0.4.3
 
@@ -43,8 +47,8 @@ All entities remain grouped below exactly one Home Assistant device: **NeoRé te
 - `tvrat` – return water temperature (optional; created only if advertised by the controller)
 - `tobj` – room/object temperature
 - `InTtopv` – flow water temperature
-- `InTtuv` – DHW temperature
-- `InTobj` – raw room/object input temperature
+- `InTtuv` – DHW temperature (created only while `TuvDef` does not report `True`)
+- `InTobj` – raw room/object input temperature (created only while `ObjDef` does not report `True`)
 - `InTbaz` – pool temperature (optional; available only when pool support is enabled)
 - `ActFlow` – heating water flow, m³/h
 - `ActHeaPow` – heating power, kW
@@ -85,6 +89,10 @@ Only the four writable `TempEkvA…D` fields are exposed from `NeoEkvValue`.
 `getlist` is queried only when the integration is loaded/reloaded, not every 15-second polling cycle. Therefore, after a NeoRé software update that adds/removes NeoApi objects, reload the integration or restart Home Assistant.
 
 Pool entities are created only when `BazDef` is false. Each pool entity must also be present in `getlist`; controllers without pool support therefore do not receive empty or unavailable pool controls.
+
+`InTobj` and `InTtuv` follow the same principle through `ObjDef`/`TuvDef`: getlist advertising the name is not by itself enough, because some controller SW keeps answering `getobject` for a sensor that is not actually wired. A controller old enough to not expose the flag at all is treated as wired, per the API manual's note that a missing getlist entry means "added in a newer SW", not "disconnected".
+
+The device information card's **Firmware** field shows `NA` when the controller does not expose `PLCPrgInfo.progVersion` (older SW). It never falls back to the integration's own release number, which is not the device's firmware.
 
 ## Install / upgrade
 

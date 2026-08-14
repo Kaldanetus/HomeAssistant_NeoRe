@@ -40,7 +40,13 @@ from .const import (
     OBJECT_ROOM_INPUT_TEMPERATURE,
     OBJECT_ROOM_TEMPERATURE,
 )
-from .entity import NeoReEntity, float_or_none, pool_is_exposed
+from .entity import (
+    NeoReEntity,
+    dhw_is_exposed,
+    float_or_none,
+    pool_is_exposed,
+    room_input_is_exposed,
+)
 
 
 @dataclass(frozen=True)
@@ -171,6 +177,18 @@ async def async_setup_entry(
         if not coordinator.has_object(definition.object_name):
             continue
         if definition.object_name == OBJECT_POOL_TEMPERATURE and not pool_is_exposed(
+            coordinator
+        ):
+            continue
+        if (
+            definition.object_name == OBJECT_ROOM_INPUT_TEMPERATURE
+            and not room_input_is_exposed(coordinator)
+        ):
+            # ObjDef reports the room sensor as not connected: getlist may
+            # still advertise InTobj on this controller SW, but the reading
+            # behind it does not really exist (see manual-neo-api).
+            continue
+        if definition.object_name == OBJECT_DHW_TEMPERATURE and not dhw_is_exposed(
             coordinator
         ):
             continue

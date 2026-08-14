@@ -10,7 +10,17 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import NeoApiClient, NeoApiError, find_object_name, resolve_object_name
-from .const import DEFAULT_SCAN_INTERVAL, DOMAIN, SUPPORTED_ROOT_OBJECTS
+from .const import (
+    DATA_FW_VERSION,
+    DATA_MODEL,
+    DATA_PLC_TYPE,
+    DATA_SERIAL_NUMBER,
+    DATA_SW_VERSION,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN,
+    SUPPORTED_ROOT_OBJECTS,
+    UNKNOWN_FIRMWARE_VERSION,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -49,6 +59,31 @@ class NeoReCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         case-insensitive lookup before building the setobject query.
         """
         return resolve_object_name(self.available_objects, requested)
+
+    def device_info_kwargs(self, base_url: str) -> dict[str, Any]:
+        """Build the physical NeoRé device's identity fields from read metadata.
+
+        Used by both `__init__.py` (device registry) and every entity's
+        `device_info` property so the two never drift apart. Home Assistant's
+        device card always labels `sw_version` "Firmware" and `hw_version`
+        "Hardware" (fixed frontend strings the integration cannot rename), so
+        the PLC's own versions are placed under those fixed slots instead of
+        the integration release: PLCPrgInfo.progVersion (the control-program
+        version) as "Firmware", and PLCInfo.version (the PLC's own firmware)
+        as "Hardware". Older controller SW does not expose PLCPrgInfo at all;
+        report `UNKNOWN_FIRMWARE_VERSION` ("NA") for Firmware in that case
+        instead of silently substituting the integration's own release
+        number, which is not the device's and previously misrepresented it.
+        """
+        return {
+            "manufacturer": "NeoRé",
+            "model": str(self.metadata.get(DATA_MODEL) or "NeoApi v2"),
+            "model_id": self.metadata.get(DATA_PLC_TYPE),
+            "sw_version": self.metadata.get(DATA_SW_VERSION) or UNKNOWN_FIRMWARE_VERSION,
+            "hw_version": self.metadata.get(DATA_FW_VERSION),
+            "serial_number": self.metadata.get(DATA_SERIAL_NUMBER),
+            "configuration_url": base_url,
+        }
 
     @property
     def supported_object_count(self) -> int:

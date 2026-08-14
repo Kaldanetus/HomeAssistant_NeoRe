@@ -10,14 +10,10 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from . import NeoReConfigEntry
 from .const import (
     CONF_BASE_URL,
-    DATA_FW_VERSION,
-    DATA_MODEL,
-    DATA_PLC_TYPE,
-    DATA_SERIAL_NUMBER,
-    DATA_SW_VERSION,
     DOMAIN,
-    INTEGRATION_VERSION,
+    OBJECT_DHW_DEFINITION,
     OBJECT_POOL_DEFINITION,
+    OBJECT_ROOM_DEFINITION,
 )
 from .coordinator import NeoReCoordinator
 
@@ -34,22 +30,10 @@ class NeoReEntity(CoordinatorEntity[NeoReCoordinator]):
     @property
     def device_info(self) -> DeviceInfo:
         """Return the single physical NeoRé device represented by this config entry."""
-        model = self.coordinator.metadata.get(DATA_MODEL) or "NeoApi v2"
         return DeviceInfo(
             identifiers={(DOMAIN, entry_identifier(self._entry))},
             name="NeoRé tepelné čerpadlo",
-            manufacturer="NeoRé",
-            model=str(model),
-            model_id=self.coordinator.metadata.get(DATA_PLC_TYPE),
-            # See __init__.py: the "Firmware"/"Hardware" labels on this card
-            # are fixed by Home Assistant, so the PLC's software and firmware
-            # versions are placed under them instead of the integration
-            # release.
-            sw_version=self.coordinator.metadata.get(DATA_SW_VERSION)
-            or INTEGRATION_VERSION,
-            hw_version=self.coordinator.metadata.get(DATA_FW_VERSION),
-            serial_number=self.coordinator.metadata.get(DATA_SERIAL_NUMBER),
-            configuration_url=self._entry.data[CONF_BASE_URL],
+            **self.coordinator.device_info_kwargs(self._entry.data[CONF_BASE_URL]),
         )
 
 
@@ -69,6 +53,35 @@ def float_or_none(value: Any) -> float | None:
         return None
 
 
+def _sensor_is_wired(coordinator: NeoReCoordinator, definition_object_name: str) -> bool:
+    """Return whether a NeoApi "*Def" flag confirms its physical sensor is wired.
+
+    Each flag reports True when the sensor is *not* connected, so the input
+    is considered present unless it is explicitly True. A controller whose SW
+    does not (yet) expose the flag reports neither True nor False for it —
+    `coordinator.data` simply has no entry — and is treated as wired, since
+    the API manual documents a missing getlist entry as belonging to a newer
+    SW version, not as "disconnected".
+    """
+    return coordinator.data.get(definition_object_name) is not True
+
+
 def pool_is_exposed(coordinator: NeoReCoordinator) -> bool:
     """Return whether pool entities should be exposed for this controller."""
-    return coordinator.data.get(OBJECT_POOL_DEFINITION) is not True
+    return _sensor_is_wired(coordinator, OBJECT_POOL_DEFINITION)
+
+
+def room_input_is_exposed(coordinator: NeoReCoordinator) -> bool:
+    """Return whether the raw (uncorrected) room input sensor is really wired.
+
+    Some controller SW advertises `InTobj` in getlist and keeps answering
+    `getobject` for it even without a physical sensor attached, mirroring
+    `tobj` instead. `ObjDef` is the documented signal for that case, so only
+    it - not getlist presence - decides whether `InTobj` is exposed.
+    """
+    return _sensor_is_wired(coordinator, OBJECT_ROOM_DEFINITION)
+
+
+def dhw_is_exposed(coordinator: NeoReCoordinator) -> bool:
+    """Return whether the DHW temperature sensor (`InTtuv`) is really wired."""
+    return _sensor_is_wired(coordinator, OBJECT_DHW_DEFINITION)

@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 DOMAIN = "neore"
-INTEGRATION_VERSION = "0.4.3"
+
+# Shown in the device card's fixed "Firmware" slot when the controller's SW
+# does not expose PLCPrgInfo.progVersion (see coordinator.device_info_kwargs).
+UNKNOWN_FIRMWARE_VERSION = "NA"
 
 DEFAULT_USERNAME = "foxtrot"
 DEFAULT_PASSWORD = "foxtrotAP1"
@@ -53,6 +56,15 @@ OBJECT_POOL_DEFINITION = "BazDef"
 OBJECT_POOL_ENABLE = "bazenmainon"
 OBJECT_POOL_HEATING = "bazenon"
 
+# "Sensor not connected" flags for readings whose *name* can be advertised in
+# getlist while the physical input behind it is not actually wired. A
+# controller whose SW predates a flag simply omits it from getlist, and the
+# manual documents that as "not yet available in this SW", not "disconnected"
+# (see manual-neo-api_14082026.pdf) - so a missing flag must NOT hide the
+# reading, only an explicit True does.
+OBJECT_ROOM_DEFINITION = "ObjDef"
+OBJECT_DHW_DEFINITION = "TuvDef"
+
 # Optional metadata published by NeoApi v2.
 OBJECT_NEORE_INFO = "IniNeoRe"
 OBJECT_SIMPLY_NEO_VERSION = "SimplyNeoVer"
@@ -81,6 +93,8 @@ BOOLEAN_OBJECTS: frozenset[str] = frozenset(
         OBJECT_POOL_DEFINITION,
         OBJECT_POOL_ENABLE,
         OBJECT_POOL_HEATING,
+        OBJECT_ROOM_DEFINITION,
+        OBJECT_DHW_DEFINITION,
     }
 )
 
@@ -115,6 +129,8 @@ POLL_OBJECTS: tuple[str, ...] = (
     OBJECT_POOL_DEFINITION,
     OBJECT_POOL_ENABLE,
     OBJECT_POOL_HEATING,
+    OBJECT_ROOM_DEFINITION,
+    OBJECT_DHW_DEFINITION,
 )
 
 SUPPORTED_ROOT_OBJECTS: frozenset[str] = frozenset(
