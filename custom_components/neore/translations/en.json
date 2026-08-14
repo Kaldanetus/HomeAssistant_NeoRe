@@ -40,9 +40,6 @@
       "dhw_temperature": {
         "name": "DHW temperature"
       },
-      "room_input_temperature": {
-        "name": "Room temperature input"
-      },
       "pool_temperature": {
         "name": "Pool temperature"
       },

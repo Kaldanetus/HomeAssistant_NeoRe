@@ -40,9 +40,6 @@
       "dhw_temperature": {
         "name": "Teplota TUV"
       },
-      "room_input_temperature": {
-        "name": "Teplota objektu – vstup"
-      },
       "pool_temperature": {
         "name": "Teplota bazénu"
       },

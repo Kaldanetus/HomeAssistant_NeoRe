@@ -2,7 +2,15 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.4.3**.
+Version **0.4.4**.
+
+## What changed in 0.4.4
+
+Fixed a display inconsistency between controllers on different NeoApi SW versions. `InTobj` (the raw, uncorrected room input temperature) is no longer read or exposed at all: only `tobj` is used to display the room/object temperature, regardless of what a controller's `getlist` advertises. Some controller SW advertised `InTobj` and kept answering `getobject` for it even though no room sensor was wired, mirroring `tobj` instead of reporting a real reading — the only reliable fix is to never rely on `InTobj`.
+
+Sensor/number availability is now detected through NeoApi's documented `*Def` "not connected" flags instead of value heuristics wherever a flag exists: `tobj` (room/object temperature) and the `tobjekreq` room setpoint now also require `ObjDef` to not report `True`, `InTtuv` (DHW temperature) requires `TuvDef`, and pool entities keep using `BazDef`. A controller SW old enough to not expose a flag at all is still treated as wired, matching the API manual's note that a name missing from `getlist` just means "not yet supported by this SW", not "disconnected". The pre-existing "value > 100 °C is a sentinel" check still applies everywhere it did before, now factored into one shared `temperature_is_exposable()` helper instead of being duplicated between the sensor and number platforms.
+
+The **Firmware** field on the device information card now shows `NA` when the controller does not expose `PLCPrgInfo.progVersion`, instead of silently substituting the integration's own release number (which is not the device's firmware and misrepresented it). The device-info fields built in `__init__.py` and in every entity's `device_info` property are now assembled by one shared `NeoReCoordinator.device_info_kwargs()` so the two card sources cannot drift apart again.
 
 ## What changed in 0.4.3
 
@@ -41,10 +49,9 @@ All entities remain grouped below exactly one Home Assistant device: **NeoRé te
 ### Sensors
 - `tvenek` – outdoor temperature
 - `tvrat` – return water temperature (optional; created only if advertised by the controller)
-- `tobj` – room/object temperature
+- `tobj` – room/object temperature (created only while `ObjDef` does not report `True`); this is the only object used for the room/object temperature — `InTobj` (the raw, uncorrected input) is never read or displayed
 - `InTtopv` – flow water temperature
-- `InTtuv` – DHW temperature
-- `InTobj` – raw room/object input temperature
+- `InTtuv` – DHW temperature (created only while `TuvDef` does not report `True`)
 - `InTbaz` – pool temperature (optional; available only when pool support is enabled)
 - `ActFlow` – heating water flow, m³/h
 - `ActHeaPow` – heating power, kW
@@ -57,7 +64,7 @@ Read-only temperature sensors are created only when their value at integration l
 
 ### Writable temperature numbers
 - `ttuvreqmain` – DHW setpoint, 30…60 °C
-- `tobjekreq` – room setpoint, 10…30 °C; created only when `tobj <= 100`
+- `tobjekreq` – room setpoint, 10…30 °C; created only while `tobj` is a real, wired reading (`tobj <= 100` and `ObjDef` does not report `True`)
 - `korekce` – water correction, ±9 °C in heating and ±3 °C in cooling
 - `tempcoolw` – cooling-water setpoint, 15…20 °C
 - `tbazenwat` – pool heating-water temperature, 10…40 °C (optional)
@@ -85,6 +92,10 @@ Only the four writable `TempEkvA…D` fields are exposed from `NeoEkvValue`.
 `getlist` is queried only when the integration is loaded/reloaded, not every 15-second polling cycle. Therefore, after a NeoRé software update that adds/removes NeoApi objects, reload the integration or restart Home Assistant.
 
 Pool entities are created only when `BazDef` is false. Each pool entity must also be present in `getlist`; controllers without pool support therefore do not receive empty or unavailable pool controls.
+
+`tobj` (and the `tobjekreq` room setpoint tied to it) and `InTtuv` follow the same principle through `ObjDef`/`TuvDef`: getlist advertising the name is not by itself enough, because some controller SW keeps answering `getobject` for a sensor that is not actually wired. A controller old enough to not expose the flag at all is treated as wired, per the API manual's note that a missing getlist entry means "added in a newer SW", not "disconnected". `InTobj` is never used for any of this — only `tobj` is read for the room/object temperature.
+
+The device information card's **Firmware** field shows `NA` when the controller does not expose `PLCPrgInfo.progVersion` (older SW). It never falls back to the integration's own release number, which is not the device's firmware.
 
 ## Install / upgrade
 
