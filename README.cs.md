@@ -103,11 +103,24 @@ Pole **Firmware** na kartě informací o zařízení zobrazuje `NA`, pokud regul
 
 ## Instalace / aktualizace
 
-1. Nahraďte adresář `/config/custom_components/neore` adresářem `custom_components/neore` z tohoto balíčku.
-2. Restartujte Home Assistant.
-3. Jedinečné identifikátory entit `tvenek` a `chodhlavni` zůstávají zachovány z verzí v0.1/v0.2.
+### HACS (doporučeno)
 
-Konfigurace v YAML není potřeba.
+NeoRé je dostupné ve výchozím obchodě [HACS](https://hacs.xyz/), vlastní repozitář tedy není potřeba přidávat.
+
+1. Otevřete **HACS**, vyhledejte **NeoRé NeoApi** a klikněte na **Stáhnout**.
+2. Restartujte Home Assistant.
+3. V **Nastavení → Zařízení a služby → Přidat integraci** vyhledejte **NeoRé** a zadejte IP adresu regulátoru.
+
+Aktualizace se v HACS zobrazí automaticky; stáhněte je a restartujte Home Assistant. Pokud jste dříve tento repozitář přidali přes **HACS → ⋮ → Vlastní repozitáře**, můžete tento záznam odebrat – nainstalovaná integrace i aktualizace zůstanou zachovány.
+
+Podrobný návod krok za krokem (instalace HACS, přiřazení do oblasti, karty na dashboardu) je v souboru [INSTALACE_HACS.md](INSTALACE_HACS.md).
+
+### Ručně
+
+1. Zkopírujte adresář `custom_components/neore` z [nejnovějšího vydání](https://github.com/Kaldanetus/HomeAssistant_NeoRe/releases/latest) do `/config/custom_components/neore` (případný stávající adresář nahraďte).
+2. Restartujte Home Assistant.
+
+Jedinečné identifikátory entit `tvenek` a `chodhlavni` zůstávají zachovány z verzí v0.1/v0.2. Konfigurace v YAML není potřeba.
 
 ## Ukázkový Lovelace dashboard
 
