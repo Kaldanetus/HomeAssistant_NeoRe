@@ -1,8 +1,9 @@
 # Instalace HACS, repozitáře NeoRé a karty v Home Assistantu
 
-Tento návod vás provede celou instalací: od HACS přes přidání vlastního GitHub
-repozitáře a integrace **NeoRé** až po přiřazení zařízení do oblasti a vytvoření
-karty na dashboardu. Konfiguraci není nutné zapisovat do
+Tento návod vás provede celou instalací: od HACS přes stažení a přidání
+integrace **NeoRé** až po přiřazení zařízení do oblasti a vytvoření karty na
+dashboardu. NeoRé je dostupné přímo ve výchozím obchodě HACS, vlastní
+repozitář tedy není potřeba přidávat. Konfiguraci není nutné zapisovat do
 `configuration.yaml`.
 
 > [!IMPORTANT]
@@ -14,15 +15,13 @@ karty na dashboardu. Konfiguraci není nutné zapisovat do
 
 - funkční Home Assistant s přístupem do složky `/config`;
 - účet na [GitHubu](https://github.com/) pro prvotní autorizaci HACS;
-- URL GitHub repozitáře s touto integrací (adresa stránky, na které právě čtete
-  tento soubor);
 - IP adresu regulátoru NeoRé dostupného ze stejné sítě jako Home Assistant;
 - oprávnění správce v Home Assistantu.
 
 ## 2. Instalace HACS
 
 Pokud již v levém panelu Home Assistantu položku **HACS** máte, pokračujte
-rovnou na [přidání repozitáře](#3-přidání-vlastního-repozitáře-z-githubu).
+rovnou na [stažení NeoRé](#3-stažení-neoré-přes-hacs).
 
 ### Doporučený způsob: aplikace HACS
 
@@ -68,28 +67,24 @@ důvěřujete adrese `get.hacs.xyz`; aktuální postup si můžete ověřit v
 > prohlížeče bez použití mezipaměti a zkontrolujte v `/config/custom_components`,
 > že existuje adresář `hacs`.
 
-## 3. Přidání vlastního repozitáře z GitHubu
+## 3. Stažení NeoRé přes HACS
 
-1. Otevřete **HACS** a zvolte kategorii **Integrace**.
-2. Otevřete nabídku **⋮** vpravo nahoře a zvolte **Vlastní repozitáře**
-   (*Custom repositories*).
-3. Do pole **Repozitář** vložte URL tohoto GitHub repozitáře, například:
-
-   ```text
-   https://github.com/UZIVATEL/HomeAssistant_NeoRe
-   ```
-
-   `UZIVATEL` nahraďte vlastníkem repozitáře. Použijte adresu repozitáře,
-   nikoli odkaz na ZIP, konkrétní soubor nebo větev.
-4. Jako **Typ** vyberte **Integrace** a klikněte na **Přidat**.
-5. V HACS vyhledejte **NeoRé NeoApi**, otevřete jej a klikněte na
-   **Stáhnout**. Pokud HACS nabídne výběr verze, ponechte nejnovější stabilní
-   verzi.
-6. Po stažení znovu **restartujte Home Assistant**.
+1. Otevřete **HACS** v levém panelu.
+2. Do vyhledávání zadejte **NeoRé** a otevřete položku **NeoRé NeoApi**.
+3. Klikněte na **Stáhnout**. Pokud HACS nabídne výběr verze, ponechte
+   nejnovější stabilní verzi.
+4. Po stažení znovu **restartujte Home Assistant**.
 
 Úspěšná instalace vytvoří adresář
 `/config/custom_components/neore`. Při aktualizaci později stačí v HACS otevřít
 NeoRé, zvolit dostupnou aktualizaci a po stažení Home Assistant restartovat.
+
+> [!NOTE]
+> Pokud jste NeoRé dříve přidali přes **⋮ → Vlastní repozitáře** (*Custom
+> repositories*), můžete tento záznam v HACS odebrat. Nainstalovaná integrace,
+> její nastavení i aktualizace zůstanou zachovány. Pokud HACS NeoRé ve
+> vyhledávání hned nenajde, počkejte, až načte aktuální seznam repozitářů
+> (obvykle do několika hodin), případně Home Assistant restartujte.
 
 ## 4. Přidání integrace NeoRé
 
@@ -177,7 +172,7 @@ Podrobnosti jsou v souboru [`examples/README.md`](examples/README.md).
 | Potíž | Doporučené řešení |
 | --- | --- |
 | HACS nebo NeoRé není v seznamu integrací | Restartujte celý Home Assistant a proveďte tvrdé obnovení stránky. |
-| HACS odmítne vlastní repozitář | Ověřte URL, veřejnou dostupnost repozitáře a typ **Integrace**. |
+| HACS nenajde NeoRé ve vyhledávání | Počkejte na načtení seznamu repozitářů nebo restartujte Home Assistant; v HACS nesmí být aktivní filtr, který skrývá nestažené položky. |
 | Integraci lze přidat, ale regulátor neodpovídá | Ověřte IP adresu, síť/VLAN, firewall a odpověď endpointu `getlist`. |
 | Některé entity chybějí | NeoRé vytváří pouze funkce inzerované regulátorem; po změně jeho konfigurace integraci znovu načtěte. |
 | Karta hlásí, že entita neexistuje | V editoru nahraďte ukázkové ID skutečným `entity_id` z vaší instalace. |

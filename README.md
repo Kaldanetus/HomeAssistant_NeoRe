@@ -99,11 +99,24 @@ The device information card's **Firmware** field shows `NA` when the controller 
 
 ## Install / upgrade
 
-1. Replace `/config/custom_components/neore` with the `custom_components/neore` directory from this package.
-2. Restart Home Assistant.
-3. Existing `tvenek` and `chodhlavni` unique IDs are preserved from v0.1/v0.2.
+### HACS (recommended)
 
-No YAML configuration is required.
+NeoRé is available in the default [HACS](https://hacs.xyz/) store, so no custom repository is needed.
+
+1. Open **HACS**, search for **NeoRé NeoApi** and click **Download**.
+2. Restart Home Assistant.
+3. Go to **Settings → Devices & services → Add integration**, search for **NeoRé** and enter the controller's IP address.
+
+Updates appear in HACS automatically; download them and restart Home Assistant. If you previously added this repository under **HACS → ⋮ → Custom repositories**, you can remove that entry – the installed integration and its updates are kept.
+
+A step-by-step guide in Czech (HACS installation, area assignment, dashboard cards) is in [INSTALACE_HACS.md](INSTALACE_HACS.md).
+
+### Manual
+
+1. Copy the `custom_components/neore` directory from the [latest release](https://github.com/Kaldanetus/HomeAssistant_NeoRe/releases/latest) to `/config/custom_components/neore`, replacing any existing one.
+2. Restart Home Assistant.
+
+Existing `tvenek` and `chodhlavni` unique IDs are preserved from v0.1/v0.2. No YAML configuration is required.
 
 ## Example Lovelace dashboard
 
