@@ -83,6 +83,20 @@
           "on": "Ohřívá",
           "off": "Neohřívá"
         }
+      },
+      "dhw_heating": {
+        "name": "Ohřev TUV",
+        "state": {
+          "on": "Ohřívá",
+          "off": "Neohřívá"
+        }
+      },
+      "dhw_electric_heating": {
+        "name": "Dohřev TUV el. patronou",
+        "state": {
+          "on": "Ohřívá",
+          "off": "Neohřívá"
+        }
       }
     },
     "switch": {

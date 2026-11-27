@@ -11,7 +11,13 @@ from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import NeoReConfigEntry
-from .const import OBJECT_ERROR_BLOCK, OBJECT_POOL_HEATING, OBJECT_TARIFF_PERMISSION
+from .const import (
+    OBJECT_DHW_ELECTRIC_HEATING,
+    OBJECT_DHW_HEATING,
+    OBJECT_ERROR_BLOCK,
+    OBJECT_POOL_HEATING,
+    OBJECT_TARIFF_PERMISSION,
+)
 from .entity import NeoReEntity, pool_is_exposed
 
 
@@ -29,6 +35,10 @@ async def async_setup_entry(
         entities.append(NeoReTariffPermissionBinarySensor(entry, coordinator))
     if coordinator.has_object(OBJECT_POOL_HEATING) and pool_is_exposed(coordinator):
         entities.append(NeoRePoolHeatingBinarySensor(entry, coordinator))
+    if coordinator.has_object(OBJECT_DHW_HEATING):
+        entities.append(NeoReDhwHeatingBinarySensor(entry, coordinator))
+    if coordinator.has_object(OBJECT_DHW_ELECTRIC_HEATING):
+        entities.append(NeoReDhwElectricHeatingBinarySensor(entry, coordinator))
     async_add_entities(entities)
 
 
@@ -78,4 +88,36 @@ class NeoRePoolHeatingBinarySensor(NeoReEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         value = self.coordinator.data.get(OBJECT_POOL_HEATING)
+        return value if isinstance(value, bool) else None
+
+
+class NeoReDhwHeatingBinarySensor(NeoReEntity, BinarySensorEntity):
+    """Whether the heat pump is currently heating domestic hot water."""
+
+    _attr_translation_key = "dhw_heating"
+    _attr_device_class = BinarySensorDeviceClass.HEAT
+
+    def __init__(self, entry, coordinator) -> None:
+        super().__init__(entry, coordinator)
+        self._attr_unique_id = f"{entry.entry_id}_{OBJECT_DHW_HEATING}"
+
+    @property
+    def is_on(self) -> bool | None:
+        value = self.coordinator.data.get(OBJECT_DHW_HEATING)
+        return value if isinstance(value, bool) else None
+
+
+class NeoReDhwElectricHeatingBinarySensor(NeoReEntity, BinarySensorEntity):
+    """Whether DHW is currently being boosted by the electric heating element."""
+
+    _attr_translation_key = "dhw_electric_heating"
+    _attr_device_class = BinarySensorDeviceClass.HEAT
+
+    def __init__(self, entry, coordinator) -> None:
+        super().__init__(entry, coordinator)
+        self._attr_unique_id = f"{entry.entry_id}_{OBJECT_DHW_ELECTRIC_HEATING}"
+
+    @property
+    def is_on(self) -> bool | None:
+        value = self.coordinator.data.get(OBJECT_DHW_ELECTRIC_HEATING)
         return value if isinstance(value, bool) else None
