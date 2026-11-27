@@ -2,7 +2,11 @@
 
 [English](README.md) | **Čeština**
 
-Verze **0.4.5**.
+Verze **0.4.6**.
+
+## Co se změnilo ve verzi 0.4.6
+
+Binární senzory `bazenon` (**Ohřev bazénu**), `tuvcompon` (**Ohřev TUV**) a `tuvbivon` (**Dohřev TUV el. patronou**) už nepoužívají třídu zařízení `heat`, kvůli které jim Home Assistant zobrazoval ikonu teploměru, přestože jde o stavové proměnné, ne o měření teploty. Nově mají vlastní stavové ikony (bazén / vlny tepla, bojler, blesk) definované v novém souboru `icons.json`.
 
 ## Co se změnilo ve verzi 0.4.5
 
@@ -98,9 +102,9 @@ Z objektu `NeoEkvValue` jsou zpřístupněna pouze čtyři zapisovatelná pole `
 
 - `errorblock` – binární senzor problému; zapnutý stav znamená, že vážná chyba blokuje provoz
 - `sazba` – diagnostický binární senzor, **ve výchozím nastavení vypnutý**; zapnutý stav znamená, že jsou procesy řízené tarifem povoleny, vypnutý stav znamená, že jsou blokovány
-- `bazenon` – binární senzor ohřevu; zapnutý stav znamená, že právě probíhá ohřev bazénu (volitelný)
-- `tuvcompon` – binární senzor ohřevu; zapnutý stav znamená, že právě probíhá ohřev TUV
-- `tuvbivon` – binární senzor ohřevu; zapnutý stav znamená, že se TUV právě dohřívá elektrickou patronou
+- `bazenon` – binární stavový senzor; zapnutý stav znamená, že právě probíhá ohřev bazénu (volitelný)
+- `tuvcompon` – binární stavový senzor; zapnutý stav znamená, že právě probíhá ohřev TUV
+- `tuvbivon` – binární stavový senzor; zapnutý stav znamená, že se TUV právě dohřívá elektrickou patronou
 
 ## Zjišťování dostupných funkcí
 
