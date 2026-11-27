@@ -2,7 +2,16 @@
 
 [English](README.md) | **Čeština**
 
-Verze **0.4.4**.
+Verze **0.4.5**.
+
+## Co se změnilo ve verzi 0.4.5
+
+Přidány dva nové binární senzory TUV (teplé užitkové vody), které se vytvoří jen tehdy, když regulátor daný objekt inzeruje v `getlist`:
+
+- `tuvcompon` – **Ohřev TUV**: zapnuto, když tepelné čerpadlo právě ohřívá TUV
+- `tuvbivon` – **Dohřev TUV el. patronou**: zapnuto, když se TUV právě dohřívá elektrickou patronou
+
+Oba senzory mají český i anglický překlad.
 
 ## Co se změnilo ve verzi 0.4.4
 
@@ -90,6 +99,8 @@ Z objektu `NeoEkvValue` jsou zpřístupněna pouze čtyři zapisovatelná pole `
 - `errorblock` – binární senzor problému; zapnutý stav znamená, že vážná chyba blokuje provoz
 - `sazba` – diagnostický binární senzor, **ve výchozím nastavení vypnutý**; zapnutý stav znamená, že jsou procesy řízené tarifem povoleny, vypnutý stav znamená, že jsou blokovány
 - `bazenon` – binární senzor ohřevu; zapnutý stav znamená, že právě probíhá ohřev bazénu (volitelný)
+- `tuvcompon` – binární senzor ohřevu; zapnutý stav znamená, že právě probíhá ohřev TUV
+- `tuvbivon` – binární senzor ohřevu; zapnutý stav znamená, že se TUV právě dohřívá elektrickou patronou
 
 ## Zjišťování dostupných funkcí
 

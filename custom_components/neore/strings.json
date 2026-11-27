@@ -83,6 +83,20 @@
           "on": "Heating",
           "off": "Idle"
         }
+      },
+      "dhw_heating": {
+        "name": "DHW heating",
+        "state": {
+          "on": "Heating",
+          "off": "Idle"
+        }
+      },
+      "dhw_electric_heating": {
+        "name": "DHW electric heater boost",
+        "state": {
+          "on": "Heating",
+          "off": "Idle"
+        }
       }
     },
     "switch": {

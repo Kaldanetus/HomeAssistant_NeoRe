@@ -2,7 +2,16 @@
 
 **English** | [Čeština](README.cs.md)
 
-Version **0.4.4**.
+Version **0.4.5**.
+
+## What changed in 0.4.5
+
+Added two new DHW (domestic hot water) binary sensors, created only when the controller advertises the object in `getlist`:
+
+- `tuvcompon` – **DHW heating**: ON while the heat pump is heating DHW
+- `tuvbivon` – **DHW electric heater boost**: ON while DHW is being boosted by the electric heating element
+
+Both have English and Czech translations.
 
 ## What changed in 0.4.4
 
@@ -86,6 +95,8 @@ Only the four writable `TempEkvA…D` fields are exposed from `NeoEkvValue`.
 - `errorblock` – binary problem sensor; ON means a serious error blocks operation
 - `sazba` – diagnostic binary sensor, **disabled by default**; ON means tariff-controlled processes are permitted, OFF means they are blocked
 - `bazenon` – binary heat sensor: pool heating is active (optional)
+- `tuvcompon` – binary heat sensor: DHW heating is active
+- `tuvbivon` – binary heat sensor: DHW is being boosted by the electric heating element
 
 ## Discovery behavior
 

@@ -58,6 +58,8 @@ OBJECT_ERROR_CODE = "errcode"
 OBJECT_POOL_DEFINITION = "BazDef"
 OBJECT_POOL_ENABLE = "bazenmainon"
 OBJECT_POOL_HEATING = "bazenon"
+OBJECT_DHW_HEATING = "tuvcompon"
+OBJECT_DHW_ELECTRIC_HEATING = "tuvbivon"
 
 # "Sensor not connected" flags used to detect whether the physical input
 # behind a reading is really wired, rather than relying on getlist alone. A
@@ -96,6 +98,10 @@ BOOLEAN_OBJECTS: frozenset[str] = frozenset(
         OBJECT_POOL_DEFINITION,
         OBJECT_POOL_ENABLE,
         OBJECT_POOL_HEATING,
+    OBJECT_DHW_HEATING,
+    OBJECT_DHW_ELECTRIC_HEATING,
+        OBJECT_DHW_HEATING,
+        OBJECT_DHW_ELECTRIC_HEATING,
         OBJECT_ROOM_DEFINITION,
         OBJECT_DHW_DEFINITION,
     }
@@ -131,6 +137,8 @@ POLL_OBJECTS: tuple[str, ...] = (
     OBJECT_POOL_DEFINITION,
     OBJECT_POOL_ENABLE,
     OBJECT_POOL_HEATING,
+    OBJECT_DHW_HEATING,
+    OBJECT_DHW_ELECTRIC_HEATING,
     OBJECT_ROOM_DEFINITION,
     OBJECT_DHW_DEFINITION,
 )
