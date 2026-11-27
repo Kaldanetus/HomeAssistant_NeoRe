@@ -1,6 +1,12 @@
 {
   "entity": {
     "binary_sensor": {
+      "pool_heating": {
+        "default": "mdi:pool",
+        "state": {
+          "on": "mdi:heat-wave"
+        }
+      },
       "dhw_heating": {
         "default": "mdi:water-boiler-off",
         "state": {

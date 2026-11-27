@@ -6,7 +6,7 @@ Version **0.4.6**.
 
 ## What changed in 0.4.6
 
-The `tuvcompon` (**DHW heating**) and `tuvbivon` (**DHW electric heater boost**) binary sensors no longer use the `heat` device class, which made Home Assistant show a thermometer icon although they are status flags, not temperature readings. They now have their own state icons (water boiler / lightning bolt), defined in the new `icons.json`.
+The `bazenon` (**Pool heating**), `tuvcompon` (**DHW heating**) and `tuvbivon` (**DHW electric heater boost**) binary sensors no longer use the `heat` device class, which made Home Assistant show a thermometer icon although they are status flags, not temperature readings. They now have their own state icons (pool / heat waves, water boiler, lightning bolt), defined in the new `icons.json`.
 
 ## What changed in 0.4.5
 
@@ -98,7 +98,7 @@ Only the four writable `TempEkvA…D` fields are exposed from `NeoEkvValue`.
 ### Errors / diagnostics
 - `errorblock` – binary problem sensor; ON means a serious error blocks operation
 - `sazba` – diagnostic binary sensor, **disabled by default**; ON means tariff-controlled processes are permitted, OFF means they are blocked
-- `bazenon` – binary heat sensor: pool heating is active (optional)
+- `bazenon` – binary status sensor: pool heating is active (optional)
 - `tuvcompon` – binary status sensor: DHW heating is active
 - `tuvbivon` – binary status sensor: DHW is being boosted by the electric heating element
 

@@ -79,7 +79,6 @@ class NeoRePoolHeatingBinarySensor(NeoReEntity, BinarySensorEntity):
     """Whether the heat pump is currently heating the pool."""
 
     _attr_translation_key = "pool_heating"
-    _attr_device_class = BinarySensorDeviceClass.HEAT
 
     def __init__(self, entry, coordinator) -> None:
         super().__init__(entry, coordinator)
