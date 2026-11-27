@@ -95,7 +95,8 @@ class NeoReDhwHeatingBinarySensor(NeoReEntity, BinarySensorEntity):
     """Whether the heat pump is currently heating domestic hot water."""
 
     _attr_translation_key = "dhw_heating"
-    _attr_device_class = BinarySensorDeviceClass.HEAT
+    # No device class: these are status flags, not temperature readings, and
+    # the HEAT class would show a thermometer icon. Icons come from icons.json.
 
     def __init__(self, entry, coordinator) -> None:
         super().__init__(entry, coordinator)
@@ -111,7 +112,6 @@ class NeoReDhwElectricHeatingBinarySensor(NeoReEntity, BinarySensorEntity):
     """Whether DHW is currently being boosted by the electric heating element."""
 
     _attr_translation_key = "dhw_electric_heating"
-    _attr_device_class = BinarySensorDeviceClass.HEAT
 
     def __init__(self, entry, coordinator) -> None:
         super().__init__(entry, coordinator)

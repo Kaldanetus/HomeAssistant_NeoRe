@@ -1,0 +1,18 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "dhw_heating": {
+        "default": "mdi:water-boiler-off",
+        "state": {
+          "on": "mdi:water-boiler"
+        }
+      },
+      "dhw_electric_heating": {
+        "default": "mdi:flash-off",
+        "state": {
+          "on": "mdi:flash"
+        }
+      }
+    }
+  }
+}
